@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - MUKTI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: 85vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-info h2 {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .chat-info p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message-sender {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .message.received .message-sender {
+            color: #667eea;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.received .message-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 16px;
+            margin-bottom: 15px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .system-message {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <button class="back-btn" onclick="window.location.href='/chat'">←</button>
+                <div class="chat-info">
+                    <h2 th:text="${otherUserName}">User Name</h2>
+                    <p>🍲 <span th:text="${foodPost.foodName}">Food Name</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div th:if="${messages == null or messages.isEmpty()}" class="system-message">
+                Start your conversation here
+            </div>
+
+            <div th:each="msg : ${messages}" 
+                 th:class="${msg.senderPhone == currentUser.phone} ? 'message sent' : 'message received'">
+                <div class="message-bubble">
+                    <div th:if="${msg.senderPhone != currentUser.phone}" 
+                         class="message-sender" th:text="${msg.senderName}">Sender</div>
+                    <div class="message-text" th:text="${msg.message}">Message text</div>
+                    <div class="message-time" 
+                         th:text="${#temporals.format(msg.timestamp, 'HH:mm')}">Time</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <form class="chat-input-form" id="messageForm">
+                <input type="text" 
+                       class="chat-input" 
+                       id="messageInput" 
+                       placeholder="Type a message..." 
+                       autocomplete="off"
+                       required>
+                <button type="submit" class="send-btn" id="sendBtn">➤</button>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const foodPostId = [[${foodPost.id}]];
+        const otherPhone = [[${otherUserPhone}]];
+        const currentUserName = [[${currentUser.name}]];
+        const currentUserPhone = [[${currentUser.phone}]];
+
+        const messageForm = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            sendBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/chat/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        foodPostId: foodPostId,
+                        receiverPhone: otherPhone,
+                        message: message
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    appendMessage(data.message, true);
+                    messageInput.value = '';
+                } else {
+                    alert('Failed to send message');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error sending message');
+            } finally {
+                sendBtn.disabled = false;
+                messageInput.focus();
+            }
+        });
+
+        // Append message to chat
+        function appendMessage(msg, isSent) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isSent ? 'message sent' : 'message received';
+            
+            const time = new Date(msg.timestamp).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${!isSent ? `<div class="message-sender">${msg.senderName}</div>` : ''}
+                    <div class="message-text">${escapeHtml(msg.message)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Poll for new messages every 3 seconds
+        setInterval(async () => {
+            try {
+                const response = await fetch(`/chat/messages/${foodPostId}?otherPhone=${otherPhone}`);
+                if (response.ok) {
+                    const messages = await response.json();
+                    updateMessages(messages);
+                }
+            } catch (error) {
+                console.error('Error polling messages:', error);
+            }
+        }, 3000);
+
+        let lastMessageCount = [[${messages != null ? messages.size() : 0}]];
+
+        function updateMessages(messages) {
+            if (messages.length > lastMessageCount) {
+                const newMessages = messages.slice(lastMessageCount);
+                newMessages.forEach(msg => {
+                    if (msg.senderPhone !== currentUserPhone) {
+                        appendMessage(msg, false);
+                    }
+                });
+                lastMessageCount = messages.length;
+            }
+        }
+
+        // Initial scroll
+        scrollToBottom();
+        messageInput.focus();
+    </script>
+</body>
+</html>

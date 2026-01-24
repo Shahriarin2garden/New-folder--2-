@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MUKTI APP - সবার জন্য খাবার</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-light: #34D399;
+            --primary-dark: #059669;
+            --secondary: #F59E0B;
+            --accent: #F97316;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --theme-text: #065F46;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Food Items Animation */
+        .food-items {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .food-item {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.2);
+            animation: floatFood 15s infinite linear;
+        }
+
+        @keyframes floatFood {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(16, 185, 129, 0.1), rgba(245, 158, 11, 0.1));
+            z-index: -1;
+            border-radius: 32px;
+        }
+
+        .theme-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 25px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 20px
+            );
+            animation: slide 20s infinite linear;
+            z-index: 0;
+        }
+
+        @keyframes slide {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .theme-text {
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .login-header {
+            padding: 35px 40px 25px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #fff, #D1FAE5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .logo-icon {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .login-body {
+            padding: 35px 40px 40px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 28px;
+            animation: slideIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.4s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: var(--primary-light);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus + .input-icon {
+            color: var(--primary-light);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-light);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0 30px;
+            animation: fadeIn 0.6s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .remember-me input:checked + .custom-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .remember-me input:checked + .custom-checkbox::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .remember-me span {
+            color: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .forgot-password {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .forgot-password:hover {
+            background: rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn i {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.6s ease 1s forwards;
+            opacity: 0;
+        }
+
+        .login-footer p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .action-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn.register {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            border: none;
+        }
+
+        .action-btn.register:hover {
+            background: linear-gradient(135deg, #FBBF24 0%, var(--secondary) 100%);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+        }
+
+        .alert-message {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            animation: slideIn 0.6s ease;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #FECACA;
+            border-color: rgba(254, 202, 202, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #A7F3D0;
+            border-color: rgba(167, 243, 208, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .theme-text {
+                font-size: 2.2rem;
+            }
+
+            .login-card {
+                max-width: 420px;
+            }
+
+            .login-body, .login-header, .theme-banner {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme-text {
+                font-size: 1.8rem;
+            }
+
+            .login-card {
+                max-width: 100%;
+                border-radius: 25px;
+            }
+
+            .login-body, .login-header, .theme-banner {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .theme-banner {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+
+            .logo {
+                font-size: 1.6rem;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Animated Food Items -->
+<div class="food-items" id="foodItems"></div>
+
+<div class="login-container">
+    <div class="login-card">
+        <!-- Theme Banner -->
+        <div class="theme-banner">
+            <div class="theme-text">সবার জন্য খাবার</div>
+            <div class="tagline">Food for All | Zero Hunger Mission</div>
+        </div>
+
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                MUKTI APP
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Login to continue sharing and receiving food</p>
+        </div>
+
+        <div class="login-body">
+            <!-- Error Message -->
+            <div th:if="${error}" class="alert-message alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}">Invalid credentials. Please try again.</span>
+            </div>
+
+            <!-- Success Message -->
+            <div th:if="${success}" class="alert-message alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}">Password reset successful! Please login.</span>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i>
+                        Phone or Email
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" name="identifier" class="input-field" placeholder="Enter your phone or email" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" class="input-field" placeholder="Enter your password" required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span class="custom-checkbox"></span>
+                        <span>Remember me</span>
+                    </label>
+                    <a th:href="@{/forgot}" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+            </form>
+
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">1,250+</span>
+                    <span class="stat-label">Meals Shared</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">620+</span>
+                    <span class="stat-label">Families Helped</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">350+</span>
+                    <span class="stat-label">Active Donors</span>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <p>New to MUKTI APP? Join our mission to end hunger</p>
+                <div class="action-links">
+                    <a th:href="@{/register}" class="action-btn register">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </a>
+                    <a th:href="@{/}" class="action-btn">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Create floating food items
+    function createFoodItems() {
+        const foodItemsContainer = document.getElementById('foodItems');
+        const foodIcons = [
+            '🍲', '🍛', '🍜', '🍝', '🍚', '🥘', '🥗', '🥙', '🧆',
+            '🌮', '🌯', '🥪', '🍕', '🍔', '🍟', '🥐', '🥖', '🥞',
+            '🍳', '🧇', '🍗', '🍖', '🥩', '🥓', '🍤', '🍣', '🍱',
+            '🥟', '🍙', '🍘', '🍥', '🥠', '🍡', '🍧', '🍨', '🍦',
+            '🥧', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍩', '🍪',
+            '🌰', '🥜', '🍯', '🥛', '🍵', '☕', '🍶', '🍺', '🍻'
+        ];
+
+        const itemCount = 20;
+
+        for (let i = 0; i < itemCount; i++) {
+            const foodItem = document.createElement('div');
+            foodItem.className = 'food-item';
+
+            // Random properties
+            const icon = foodIcons[Math.floor(Math.random() * foodIcons.length)];
+            const size = Math.random() * 2 + 1.5;
+            const x = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 10 + 10;
+            const opacity = Math.random() * 0.3 + 0.1;
+
+            foodItem.textContent = icon;
+            foodItem.style.left = `${x}%`;
+            foodItem.style.fontSize = `${size}rem`;
+            foodItem.style.animationDelay = `${delay}s`;
+            foodItem.style.animationDuration = `${duration}s`;
+            foodItem.style.opacity = opacity;
+
+            foodItemsContainer.appendChild(foodItem);
+        }
+    }
+
+    // Toggle password visibility
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.querySelector('#togglePassword i');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.className = 'fas fa-eye-slash';
+            toggleIcon.style.color = 'var(--primary-light)';
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.className = 'fas fa-eye';
+            toggleIcon.style.color = 'rgba(255, 255, 255, 0.8)';
+        }
+    }
+
+    // Form submission animation
+    function animateButton() {
+        const button = document.querySelector('.login-btn');
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            button.style.transform = '';
+        }, 150);
+    }
+
+    // Add input focus effects
+    function setupInputEffects() {
+        const inputs = document.querySelectorAll('.input-field');
+
+        inputs.forEach(input => {
+            // Add focus/blur effects
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = '';
+            });
+
+            // Add glow effect when typing
+            input.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    this.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.4)';
+                } else {
+                    this.style.boxShadow = '';
+                }
+            });
+        });
+    }
+
+    // Add ripple effect to buttons
+    function addRippleEffect() {
+        const buttons = document.querySelectorAll('.login-btn, .action-btn');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.animation = 'ripple 0.6s linear';
+
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+
+                this.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    }
+
+    // Add CSS for ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            to {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize everything when DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create floating food items
+        createFoodItems();
+
+        // Setup event listeners
+        document.getElementById('togglePassword').addEventListener('click', togglePasswordVisibility);
+        document.querySelector('form').addEventListener('submit', animateButton);
+        document.querySelector('.login-btn').addEventListener('click', animateButton);
+
+        // Setup input effects
+        setupInputEffects();
+
+        // Add ripple effects
+        addRippleEffect();
+
+        // Auto focus on first input
+        setTimeout(() => {
+            document.querySelector('input[name="identifier"]').focus();
+        }, 500);
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.type !== 'submit') {
+                e.preventDefault();
+                document.querySelector('.login-btn').click();
+            }
+
+            if (e.key === 'Escape') {
+                document.activeElement.blur();
+            }
+        });
+
+        // Add subtle card animation on mouse move
+        const card = document.querySelector('.login-card');
+        document.addEventListener('mousemove', function(e) {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+
+            card.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Reset card rotation when mouse leaves
+        document.addEventListener('mouseleave', function() {
+            card.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+        });
+    });
+</script>
+</body>
+</html>

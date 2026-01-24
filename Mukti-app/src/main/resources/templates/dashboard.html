@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | MUKTI APP - Food Sharing Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #EF6C00;
+            --accent: #2196F3;
+            --accent-dark: #0D47A1;
+            --warm: #FF5722;
+            --dark: #263238;
+            --light: #F5F7FA;
+            --gray: #546E7A;
+            --light-gray: #CFD8DC;
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 35px 70px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decorative food icons floating in background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%232e7d32' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Main Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.95) 0%, rgba(27, 94, 32, 0.95) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 30px 45px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .dashboard-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text span:first-child {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1;
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-text span:last-child {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 18px 30px;
+            border-radius: 22px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
+        }
+
+        .user-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.3);
+            border: 4px solid white;
+        }
+
+        .user-details h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+
+        .user-details p {
+            color: var(--gray);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-details p i {
+            color: var(--primary);
+        }
+
+        .logout-btn {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(211, 47, 47, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .logout-btn:hover::before {
+            left: 100%;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Main Action Cards */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .action-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+            position: relative;
+        }
+
+        .action-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(255, 152, 0, 0.05) 100%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .action-card:hover::after {
+            opacity: 1;
+        }
+
+        .action-card:hover {
+            transform: translateY(-18px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-image {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .card-donate .card-image {
+            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        }
+
+        .card-receive .card-image {
+            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        }
+
+        .card-history .card-image {
+            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        }
+
+        .card-chat .card-image {
+            background-image: url('https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 200px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-donate .action-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .card-receive .action-icon {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        }
+
+        .card-history .action-icon {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+
+        .card-chat .action-icon {
+            background: linear-gradient(135deg, #9333EA 0%, #7C3AED 100%);
+        }
+
+        .action-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .action-description {
+            color: var(--gray);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .action-btn {
+            padding: 15px 35px;
+            border-radius: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .card-donate .action-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+        .card-receive .action-btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        }
+        .card-history .action-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+        .card-chat .action-btn {
+            background: linear-gradient(135deg, #9333EA 0%, #7C3AED 100%);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 40px;
+            font-weight: 800;
+            text-align: center;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 25%;
+            width: 50%;
+            height: 5px;
+            background: linear-gradient(to right, transparent, var(--secondary), transparent);
+            border-radius: 5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 35px 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: var(--primary);
+            font-size: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Live Activity Section */
+        .activity-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .activity-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity-title i {
+            color: var(--primary);
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .activity-item {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--light-gray);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .activity-details h4 {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .activity-details p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(27, 94, 32, 0.9) 100%);
+            backdrop-filter: blur(25px);
+            border-radius: 28px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .footer h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .footer p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-content { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-header { flex-direction: column; text-align: center; padding: 25px; }
+            .user-info { justify-content: center; width: 100%; }
+            .activity-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .dashboard-content { grid-template-columns: 1fr; gap: 30px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .activity-grid { grid-template-columns: 1fr; }
+            .action-card:hover { transform: translateY(-10px); }
+            .card-content { padding: 30px; }
+            .action-title { font-size: 1.8rem; }
+            .section-title { font-size: 2rem; }
+            .logo-text span:first-child { font-size: 1.8rem; }
+            .footer-links { flex-direction: column; align-items: center; }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-header { padding: 20px; }
+            .user-info { flex-direction: column; text-align: center; padding: 15px; }
+            .logout-btn { width: 100%; justify-content: center; }
+            .card-image { height: 180px; }
+            .footer { padding: 30px 20px; }
+        }
+
+        /* Animation for stats */
+        @keyframes countUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .stat-card {
+            animation: countUp 0.8s ease-out forwards;
+            animation-delay: calc(var(--order) * 0.1s);
+            opacity: 0;
+        }
+
+        /* Realistic shadow effects */
+        .shadow-effect {
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+        }
+
+        /* Subtle floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <div class="logo-text">
+                <span>MUKTI APP</span>
+                <span>FIGHTING HUNGER, REDUCING WASTE</span>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <h3 th:text="${user.name}">User Name</h3>
+                <p>
+                    <i class="fas fa-phone"></i>
+                    <span th:text="${user.phone}">Loading...</span>
+                </p>
+            </div>
+        </div>
+
+        <a th:href="@{/logout}" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- Main Action Cards -->
+    <div class="dashboard-content">
+        <a th:href="@{/food/donate}" class="action-card card-donate shadow-effect floating" style="animation-delay: 0s;">
+            <div class="card-image">
+                <div class="card-tag">ACTIVE</div>
+            </div>
+            <div class="card-content">
+                <div class="action-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3 class="action-title">Donate Food</h3>
+                <p class="action-description">Share surplus food from your home, restaurant, or event. Your donation helps feed families while reducing food waste in your community.</p>
+                <div class="action-btn">
+                    <span>Start Donating</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </div>
+        </a>
+
+        <a th:href="@{/food/receive-page}" class="action-card card-receive shadow-effect floating" style="animation-delay: 0.2s;">
+            <div class="card-image">
+                <div class="card-tag">HOT MEALS</div>
+            </div>
+            <div class="card-content">
+                <div class="action-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 class="action-title">Receive Food</h3>
+                <p class="action-description">Find fresh, nutritious meals donated by local businesses and neighbors. Request food for yourself, your family, or community center.</p>
+                <div class="action-btn">
+                    <span>Find Nearby Meals</span>
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </a>
+
+        <a th:href="@{/food/history}" class="action-card card-history shadow-effect floating" style="animation-delay: 0.4s;">
+            <div class="card-image">
+                <div class="card-tag">TRACKING</div>
+            </div>
+            <div class="card-content">
+                <div class="action-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="action-title">Your Impact History</h3>
+                <p class="action-description">Track your donations and requests. See how many meals you've shared or received, and the positive impact you've made in your community.</p>
+                <div class="action-btn">
+                    <span>View Your Impact</span>
+                    <i class="fas fa-history"></i>
+                </div>
+            </div>
+        </a>
+
+        <a th:href="@{/chat}" class="action-card card-chat shadow-effect floating" style="animation-delay: 0.6s;">
+            <div class="card-image">
+                <div class="card-tag">CONNECT</div>
+            </div>
+            <div class="card-content">
+                <div class="action-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="action-title">Messages</h3>
+                <p class="action-description">Chat with donors and receivers. Coordinate pickup times, share details, and build connections within the community.</p>
+                <div class="action-btn">
+                    <span>Open Messages</span>
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Live Activity Section -->
+    <div class="activity-section">
+        <h2 class="activity-title">
+            <i class="fas fa-bell"></i>
+            Recent Community Activity
+        </h2>
+        <div class="activity-grid">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="activity-details">
+                    <h4>Fresh Delivery</h4>
+                    <p>Green Restaurant just donated 25 meals</p>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="activity-details">
+                    <h4>Community Help</h4>
+                    <p>12 families received food yesterday</p>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="activity-details">
+                    <h4>Achievement</h4>
+                    <p>You helped reduce 150kg of food waste</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="stats-section">
+        <h2 class="section-title">Your Community Impact</h2>
+        <div class="stats-grid">
+            <div class="stat-card" style="--order: 1">
+                <div class="stat-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <div class="stat-number" th:text="${stats != null ? stats.totalDonations : '0'}">0</div>
+                <div class="stat-label">Total Donations</div>
+            </div>
+            <div class="stat-card" style="--order: 2">
+                <div class="stat-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="stat-number" th:text="${stats != null ? stats.totalReceived : '0'}">0</div>
+                <div class="stat-label">Meals Received</div>
+            </div>
+            <div class="stat-card" style="--order: 3">
+                <div class="stat-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="stat-number" th:text="${stats != null ? stats.activePosts : '0'}">0</div>
+                <div class="stat-label">Active Posts</div>
+            </div>
+            <div class="stat-card" style="--order: 4">
+                <div class="stat-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="stat-number" th:text="${stats != null ? stats.peopleHelped : '1'}">1</div>
+                <div class="stat-label">People Helped</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h3>Together Against Hunger</h3>
+        <p>MUKTI APP connects food donors with people in need, reducing food waste while fighting hunger in our communities. Every meal shared makes a difference.</p>
+        <div class="footer-links">
+            <a href="#" class="footer-link">About Us</a>
+            <a href="#" class="footer-link">How It Works</a>
+            <a href="#" class="footer-link">Safety Guidelines</a>
+            <a href="#" class="footer-link">Contact Support</a>
+            <a href="#" class="footer-link">Community Stories</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add realistic hover effects
+        const cards = document.querySelectorAll('.action-card, .stat-card, .activity-item');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+                this.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+
+        // Animate stats with counting effect
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const target = parseInt(stat.textContent);
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    clearInterval(timer);
+                    stat.textContent = target;
+                } else {
+                    stat.textContent = Math.floor(current);
+                }
+            }, 16);
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.action-btn, .logout-btn, .footer-link').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size/2;
+                const y = e.clientY - rect.top - size/2;
+
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.6);
+                    transform: scale(0);
+                    animation: ripple 0.8s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    top: ${y}px;
+                    left: ${x}px;
+                    pointer-events: none;
+                `;
+
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 800);
+            });
+        });
+
+        // Add floating animation delay to cards
+        const floatingCards = document.querySelectorAll('.floating');
+        floatingCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+
+        // Create CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Update activity feed every 10 seconds (simulated)
+        setInterval(() => {
+            const activities = [
+                { icon: 'truck', title: 'New Donation', text: 'Local bakery donated fresh bread' },
+                { icon: 'heart', title: 'Thank You', text: 'Family received their weekly meals' },
+                { icon: 'recycle', title: 'Waste Reduced', text: '50kg food saved from landfill today' },
+                { icon: 'user-plus', title: 'New Volunteer', text: 'Sarah joined as community helper' }
+            ];
+
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            const activityItems = document.querySelectorAll('.activity-item');
+            const randomItem = activityItems[Math.floor(Math.random() * activityItems.length)];
+
+            // Update with fade effect
+            randomItem.style.opacity = '0.5';
+            setTimeout(() => {
+                randomItem.querySelector('.activity-icon i').className = `fas fa-${randomActivity.icon}`;
+                randomItem.querySelector('h4').textContent = randomActivity.title;
+                randomItem.querySelector('p').textContent = randomActivity.text;
+                randomItem.style.opacity = '1';
+            }, 300);
+        }, 10000);
+    });
+</script>
+</body>
+</html>

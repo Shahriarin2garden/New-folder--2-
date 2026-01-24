@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity History | MUKTI APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --primary-dark: #3730A3;
+            --success: #10B981;
+            --success-light: #34D399;
+            --danger: #EF4444;
+            --danger-light: #F87171;
+            --warning: #F59E0B;
+            --warning-light: #FBBF24;
+            --info: #3B82F6;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+                url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Styles */
+        .page-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, var(--primary), var(--success));
+        }
+
+        .page-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 50px 0 25px 0;
+            color: white;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+        }
+
+        /* History Cards */
+        .history-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .donated-card::before {
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+        }
+
+        .received-card::before {
+            background: linear-gradient(to bottom, var(--success), #059669);
+        }
+
+        .history-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .history-card:hover::before {
+            width: 10px;
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .s-processing {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            color: #92400E;
+            border: 2px solid #F59E0B;
+        }
+
+        .s-received {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+            color: #065F46;
+            border: 2px solid #10B981;
+        }
+
+        .s-cancelled {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+            color: #991B1B;
+            border: 2px solid #EF4444;
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .food-info {
+            flex: 1;
+        }
+
+        .food-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            color: #1F2937;
+            margin: 10px 0 5px 0;
+            font-weight: 700;
+        }
+
+        .food-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .food-meta i {
+            color: var(--primary);
+        }
+
+        .card-side {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .user-role {
+            background: linear-gradient(135deg, #E5E7EB, #F3F4F6);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            color: #4B5563;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #9CA3AF;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        /* Party Info */
+        .party-info {
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+        }
+
+        .party-info p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4B5563;
+        }
+
+        .party-info b {
+            color: #1F2937;
+            min-width: 100px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .party-info i {
+            color: var(--primary);
+        }
+
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-ok {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, var(--danger), #DC2626);
+            color: white;
+        }
+
+        .btn-chat {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            margin-top: 10px;
+            color: #92400E;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .blink {
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Chat Styles - Enhanced */
+        .chat-container {
+            margin-top: 25px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            display: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .close-chat {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-chat:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            height: 300px;
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 75%;
+            word-wrap: break-word;
+            position: relative;
+            line-height: 1.5;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .message.sent {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .message.received {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #E5E7EB;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            display: flex;
+            background: white;
+            padding: 15px;
+            border-top: 1px solid #E5E7EB;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 50px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #F9FAFB;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .send-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 30px 0;
+        }
+
+        .empty-state i {
+            font-size: 70px;
+            margin-bottom: 25px;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: #374151;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #6B7280;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0;
+            transform: translateX(100px);
+            backdrop-filter: blur(20px);
+        }
+
+        .connection-status.connected {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+            color: #065F46;
+            border: 2px solid #10B981;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .connection-status.connecting {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            color: #92400E;
+            border: 2px solid #F59E0B;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .connection-status.disconnected {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+            color: #991B1B;
+            border: 2px solid #EF4444;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
+            margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+            border: none;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Chat Empty State */
+        .chat-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6B7280;
+        }
+
+        .chat-empty i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #CBD5E1;
+            opacity: 0.5;
+        }
+
+        .chat-empty h4 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 10px;
+            color: #4B5563;
+        }
+
+        .no-messages {
+            font-size: 14px;
+            color: #94A3B8;
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            border: 2px dashed #E5E7EB;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h2 {
+                font-size: 2rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card-side {
+                text-align: left;
+                width: 100%;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .chat-messages {
+                height: 250px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+<!-- Connection Status Indicator -->
+<div id="connectionStatus" class="connection-status">
+    <i class="fas fa-circle"></i>
+    <span>Connecting...</span>
+</div>
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-history floating" style="color: var(--primary);"></i> Activity History</h2>
+        <p>Track all your food donations and receipts. Manage ongoing activities and communicate with other users.</p>
+    </div>
+
+    <!-- Donations Section -->
+    <div class="section-title">
+        <i class="fas fa-hand-holding-heart" style="color: var(--primary);"></i> My Donations
+    </div>
+
+    <div th:if="${#lists.isEmpty(donations)}" class="empty-state">
+        <i class="fas fa-box-open floating"></i>
+        <h3>No donations yet</h3>
+        <p>You haven't made any food donations yet. Start sharing food to help your community!</p>
+        <a th:href="@{/food/donate}" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 12px 25px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; text-decoration: none; border-radius: 12px; font-weight: 600;">
+            <i class="fas fa-plus-circle"></i> Make Your First Donation
+        </a>
+    </div>
+
+    <!-- Donation Cards -->
+    <div th:each="h : ${donations}" class="history-card donated-card">
+        <div class="card-header">
+            <div class="food-info">
+                <span class="badge" th:classappend="'s-' + ${#strings.toLowerCase(h.status)}" th:text="${h.status}">
+                    <i th:if="${h.status == 'Processing'}" class="fas fa-sync-alt fa-spin"></i>
+                    <i th:if="${h.status == 'Received'}" class="fas fa-check-circle"></i>
+                    <i th:if="${h.status == 'Cancelled'}" class="fas fa-times-circle"></i>
+                    <span th:text="${h.status}">Status</span>
+                </span>
+                <h3 th:text="${h.foodName}">Food Name</h3>
+                <div class="food-meta">
+                    <span><i class="fas fa-clock"></i> <span th:text="${#temporals.format(h.activityTime, 'dd MMM, hh:mm a')}">Date</span></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Food Donation</span>
+                </div>
+            </div>
+            <div class="card-side">
+                <div class="user-role">
+                    <i class="fas fa-hand-holding-heart"></i> DONOR
+                </div>
+                <div class="timestamp">
+                    <i class="far fa-clock"></i>
+                    <span th:text="${#temporals.format(h.activityTime, 'hh:mm a')}">Time</span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${h.otherPartyName != null}" class="party-info">
+            <p><b><i class="fas fa-user-circle"></i> Received By:</b> <span th:text="${h.otherPartyName}">Receiver</span></p>
+            <p><b><i class="fas fa-phone-alt"></i> Contact:</b> <a th:href="'tel:' + ${h.otherPartyPhone}" style="color: var(--primary); text-decoration: none; font-weight: 500;" th:text="${h.otherPartyPhone}">Phone</a></p>
+        </div>
+
+        <div th:if="${h.status == 'Processing'}" class="status-indicator">
+            <i class="fas fa-circle blink" style="color: #F59E0B;"></i>
+            <span>You can chat with the receiver</span>
+        </div>
+
+        <div th:if="${h.status == 'Processing'}" class="btn-group">
+            <button class="btn btn-ok" onclick="updateStatus([[${h.id}]], 'complete')">
+                <i class="fas fa-check-circle"></i> Mark as Received
+            </button>
+            <button class="btn btn-chat"
+                    th:attr="data-id=${h.id}, data-user-type='donor', data-other-party-name=${h.otherPartyName}"
+                    onclick="openChatWithData(this)">
+                <i class="fas fa-comments"></i> Text Receiver
+            </button>
+            <button class="btn btn-no" onclick="updateStatus([[${h.id}]], 'cancel')">
+                <i class="fas fa-times-circle"></i> Cancel Donation
+            </button>
+        </div>
+
+        <!-- Chat Container for Donor -->
+        <div th:if="${h.status == 'Processing'}" class="chat-container" th:id="'chat-' + ${h.id}">
+            <div class="chat-header">
+                <span><i class="fas fa-comment-dots"></i> Chat with <span th:text="${h.otherPartyName}">Receiver</span></span>
+                <button class="close-chat" th:attr="onclick='closeChatSpecific(' + ${h.id} + ')'">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" th:id="'messages-' + ${h.id}">
+                <div class="no-messages">No messages yet. Start the conversation!</div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" th:id="'input-' + ${h.id}" placeholder="Type your message here...">
+                <button class="send-btn" th:attr="onclick='sendMessageSpecific(' + ${h.id} + ', \'donor\')'">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Received Section -->
+    <div class="section-title" style="margin-top: 60px;">
+        <i class="fas fa-utensils" style="color: var(--success);"></i> Food Received
+    </div>
+
+    <div th:if="${#lists.isEmpty(receives)}" class="empty-state">
+        <i class="fas fa-utensils floating"></i>
+        <h3>No received food yet</h3>
+        <p>You haven't received any food donations yet. Check available donations in your area!</p>
+        <a th:href="@{/food/receive-page}" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 12px 25px; background: linear-gradient(135deg, var(--success), #059669); color: white; text-decoration: none; border-radius: 12px; font-weight: 600;">
+            <i class="fas fa-search"></i> Find Available Food
+        </a>
+    </div>
+
+    <!-- Received Cards -->
+    <div th:each="h : ${receives}" class="history-card received-card">
+        <div class="card-header">
+            <div class="food-info">
+                <span class="badge" th:classappend="'s-' + ${#strings.toLowerCase(h.status)}" th:text="${h.status}">
+                    <i th:if="${h.status == 'Processing'}" class="fas fa-sync-alt fa-spin"></i>
+                    <i th:if="${h.status == 'Received'}" class="fas fa-check-circle"></i>
+                    <i th:if="${h.status == 'Cancelled'}" class="fas fa-times-circle"></i>
+                    <span th:text="${h.status}">Status</span>
+                </span>
+                <h3 th:text="${h.foodName}">Food Name</h3>
+                <div class="food-meta">
+                    <span><i class="fas fa-clock"></i> <span th:text="${#temporals.format(h.activityTime, 'dd MMM, hh:mm a')}">Date</span></span>
+                    <span><i class="fas fa-utensils"></i> Food Received</span>
+                </div>
+            </div>
+            <div class="card-side">
+                <div class="user-role">
+                    <i class="fas fa-utensils"></i> RECEIVER
+                </div>
+                <div class="timestamp">
+                    <i class="far fa-clock"></i>
+                    <span th:text="${#temporals.format(h.activityTime, 'hh:mm a')}">Time</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="party-info">
+            <p><b><i class="fas fa-hand-holding-heart"></i> Donor:</b> <span th:text="${h.otherPartyName}">Donor</span></p>
+            <p><b><i class="fas fa-phone-alt"></i> Contact:</b> <a th:href="'tel:' + ${h.otherPartyPhone}" style="color: var(--primary); text-decoration: none; font-weight: 500;" th:text="${h.otherPartyPhone}">Phone</a></p>
+        </div>
+
+        <div th:if="${h.status == 'Processing'}" class="status-indicator">
+            <i class="fas fa-circle blink" style="color: #F59E0B;"></i>
+            <span>You can chat with the donor</span>
+        </div>
+
+        <div th:if="${h.status == 'Processing'}" class="btn-group">
+            <button class="btn btn-chat"
+                    th:attr="data-id=${h.id}, data-user-type='receiver', data-other-party-name=${h.otherPartyName}"
+                    onclick="openChatWithData(this)">
+                <i class="fas fa-comments"></i> Text Donor
+            </button>
+        </div>
+
+        <!-- Chat Container for Receiver -->
+        <div th:if="${h.status == 'Processing'}" class="chat-container" th:id="'chat-' + ${h.id}">
+            <div class="chat-header">
+                <span><i class="fas fa-comment-dots"></i> Chat with <span th:text="${h.otherPartyName}">Donor</span></span>
+                <button class="close-chat" th:attr="onclick='closeChatSpecific(' + ${h.id} + ')'">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" th:id="'messages-' + ${h.id}">
+                <div class="no-messages">No messages yet. Start the conversation!</div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" th:id="'input-' + ${h.id}" placeholder="Type your message here...">
+                <button class="send-btn" th:attr="onclick='sendMessageSpecific(' + ${h.id} + ', \'receiver\')'">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div style="text-align: center; margin: 60px 0 40px 0;">
+        <a th:href="@{/dashboard}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+    // Original updateStatus function - KEEP THIS UNCHANGED
+    async function updateStatus(id, type) {
+        const path = type === 'complete' ? '/food/complete/' : '/food/cancel/';
+        if(confirm(type === 'complete' ? "Confirm that the food has been received?" : "Are you sure you want to cancel this donation?")) {
+            try {
+                const res = await fetch(path + id, { method: 'POST' });
+                if(res.ok) {
+                    showNotification('Success!', 'Status updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification('Error', 'Update failed. Please try again.', 'error');
+                }
+            } catch (e) {
+                showNotification('Server Error', 'Unable to connect to server', 'error');
+            }
+        }
+    }
+
+    // ========== ENHANCED CHAT FUNCTIONALITY ==========
+    let currentChatId = null;
+    let currentUserType = null;
+
+    // Open chat using data from button
+    function openChatWithData(button) {
+        const activityId = button.getAttribute('data-id');
+        const userType = button.getAttribute('data-user-type');
+        const otherPartyName = button.getAttribute('data-other-party-name');
+
+        // Close any open chat first
+        if (currentChatId && currentChatId !== activityId) {
+            closeChatSpecific(currentChatId);
+        }
+
+        // Show the chat container
+        const chatContainer = document.getElementById('chat-' + activityId);
+        if (chatContainer) {
+            chatContainer.style.display = 'block';
+            currentChatId = activityId;
+            currentUserType = userType;
+
+            // Add smooth animation
+            chatContainer.style.opacity = '0';
+            chatContainer.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                chatContainer.style.opacity = '1';
+                chatContainer.style.transform = 'translateY(0)';
+                chatContainer.style.transition = 'all 0.3s ease';
+            }, 10);
+
+            // Focus on input
+            const input = document.getElementById('input-' + activityId);
+            if (input) {
+                setTimeout(() => input.focus(), 300);
+            }
+
+            // Show notification
+            showNotification('Chat Opened', `You can now chat with ${otherPartyName}`, 'info');
+        }
+    }
+
+    // Close specific chat
+    function closeChatSpecific(activityId) {
+        const chatContainer = document.getElementById('chat-' + activityId);
+        if (chatContainer) {
+            chatContainer.style.opacity = '1';
+            chatContainer.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                chatContainer.style.display = 'none';
+                chatContainer.style.opacity = '0';
+                chatContainer.style.transform = 'translateY(20px)';
+            }, 10);
+        }
+
+        if (currentChatId === activityId) {
+            currentChatId = null;
+            currentUserType = null;
+        }
+    }
+
+    // Send message for specific chat
+    function sendMessageSpecific(activityId, userType) {
+        const input = document.getElementById('input-' + activityId);
+        if (!input) return;
+
+        const message = input.value.trim();
+        if (message === '') {
+            input.focus();
+            return;
+        }
+
+        // Add message to chat
+        addMessageToChat(activityId, message, userType);
+
+        // Clear input
+        input.value = '';
+        input.focus();
+
+        // For demo: Simulate a reply after 1-2 seconds
+        setTimeout(() => {
+            if (currentChatId === activityId) {
+                const replies = [
+                    "Thanks for your message!",
+                    "I'll be there in 10 minutes",
+                    "Can we meet at the location?",
+                    "Is the food still available?",
+                    "Thank you so much!",
+                    "I'm on my way.",
+                    "Perfect! See you soon.",
+                    "Can you share your exact location?"
+                ];
+                const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                const otherUserType = userType === 'donor' ? 'receiver' : 'donor';
+                addMessageToChat(activityId, randomReply, otherUserType);
+            }
+        }, 1000 + Math.random() * 1000);
+    }
+
+    // Add message to chat display
+    function addMessageToChat(activityId, message, sender) {
+        const messagesContainer = document.getElementById('messages-' + activityId);
+        if (!messagesContainer) return;
+
+        // Remove "no messages" text if present
+        const noMessages = messagesContainer.querySelector('.no-messages');
+        if (noMessages) {
+            noMessages.remove();
+        }
+
+        // Create message element
+        const messageDiv = document.createElement('div');
+        const isCurrentUser = sender === currentUserType;
+        messageDiv.className = 'message ' + (isCurrentUser ? 'sent' : 'received');
+
+        const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        // Escape HTML to prevent XSS
+        const escapedMessage = message
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        messageDiv.innerHTML = `
+            <div>${escapedMessage}</div>
+            <div class="message-time">${timestamp}</div>
+        `;
+
+        messagesContainer.appendChild(messageDiv);
+
+        // Scroll to bottom with animation
+        messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    // Add Enter key support for all chat inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listeners for Enter key in all chat inputs
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && currentChatId) {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.classList.contains('chat-input')) {
+                    event.preventDefault();
+                    const inputId = activeElement.id;
+                    if (inputId.startsWith('input-')) {
+                        const activityId = inputId.replace('input-', '');
+                        const chatContainer = document.getElementById('chat-' + activityId);
+                        if (chatContainer && chatContainer.style.display === 'block') {
+                            const isDonorChat = chatContainer.closest('.donated-card') !== null;
+                            const userType = isDonorChat ? 'donor' : 'receiver';
+                            sendMessageSpecific(activityId, userType);
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add click event listeners to all send buttons
+        document.querySelectorAll('.send-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const onclickAttr = this.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes('sendMessageSpecific')) {
+                    eval(onclickAttr);
+                }
+            });
+        });
+
+        // Add click event listeners to all close buttons
+        document.querySelectorAll('.close-chat').forEach(button => {
+            button.addEventListener('click', function() {
+                const onclickAttr = this.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes('closeChatSpecific')) {
+                    eval(onclickAttr);
+                }
+            });
+        });
+
+        // Add hover effects to all buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simulate connection
+        updateConnectionStatus('connecting', 'Connecting...');
+        setTimeout(() => {
+            updateConnectionStatus('connected', 'Connected to Chat');
+        }, 800);
+
+        // Add demo messages for first active chat
+        setTimeout(() => {
+            const firstChatBtn = document.querySelector('.btn-chat');
+            if (firstChatBtn) {
+                const activityId = firstChatBtn.getAttribute('data-id');
+                const userType = firstChatBtn.getAttribute('data-user-type');
+                const otherUserType = userType === 'donor' ? 'receiver' : 'donor';
+
+                setTimeout(() => {
+                    if (currentChatId === activityId) {
+                        addMessageToChat(activityId, "Hello! I'm here to coordinate the food delivery.", otherUserType);
+                    }
+                }, 500);
+            }
+        }, 1000);
+    });
+
+    // Enhanced connection status
+    function updateConnectionStatus(status, message) {
+        const connectionStatus = document.getElementById('connectionStatus');
+        if (!connectionStatus) return;
+
+        connectionStatus.className = 'connection-status ' + status;
+        connectionStatus.querySelector('span').textContent = message;
+
+        const icon = connectionStatus.querySelector('i');
+        icon.style.color = status === 'connected' ? '#10B981' :
+                          status === 'connecting' ? '#F59E0B' : '#EF4444';
+
+        // Show with animation
+        setTimeout(() => {
+            if (status === 'connected') {
+                setTimeout(() => {
+                    connectionStatus.style.opacity = '0';
+                    connectionStatus.style.transform = 'translateX(100px)';
+                }, 3000);
+            }
+        }, 100);
+    }
+
+    // Show notification function
+    function showNotification(title, message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            background: ${type === 'success' ? '#D1FAE5' : type === 'error' ? '#FEE2E2' : '#DBEAFE'};
+            color: ${type === 'success' ? '#065F46' : type === 'error' ? '#991B1B' : '#1E40AF'};
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10000;
+            max-width: 300px;
+            transform: translateX(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-left: 5px solid ${type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#3B82F6'};
+            backdrop-filter: blur(10px);
+        `;
+
+        notification.innerHTML = `
+            <div style="font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                ${title}
+            </div>
+            <div style="font-size: 14px;">${message}</div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+            notification.style.opacity = '1';
+        }, 10);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100px)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 3000);
+    }
+</script>
+</body>
+</html>
