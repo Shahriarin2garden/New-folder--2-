@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <link th:href="@{/css/global.css}" rel="stylesheet">
     <style>
         :root {
             --primary: #10B981;
@@ -283,6 +284,7 @@
 </head>
 
 <body>
+    <script th:src="@{/js/global.js}"></script>
     <div class="container">
         <header class="header-nav">
             <a th:href="@{/dashboard}" class="back-btn">

@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <link th:href="@{/css/global.css}" rel="stylesheet">
     <style>
         :root {
             --primary: #10B981;
@@ -479,17 +480,23 @@
 </head>
 
 <body>
-    <div class="ambient-light"></div>
+    <script th:src="@{/js/global.js}"></script>
 
     <nav class="navbar" id="navbar">
         <a href="/" class="logo">
             <i class="fas fa-leaf"></i>
             <span>MUKTI</span>
         </a>
-        <div class="user-profile" th:if="${user != null}">
-            <a th:href="@{/logout}" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <a th:href="@{/food/leaderboard}"
+                style="text-decoration: none; color: white; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-trophy" style="color: var(--secondary);"></i> Leaderboard
             </a>
+            <div class="user-profile" th:if="${user != null}">
+                <a th:href="@{/logout}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -507,13 +514,12 @@
             </div>
             <div class="quick-stats">
                 <div class="quick-stat-item">
-                    <span class="qs-number" th:text="${stats != null ? stats.activePosts : '0'}">0</span>
-                    <span class="qs-label">Active</span>
+                    <span class="qs-number" th:text="${user.points}">0</span>
+                    <span class="qs-label">Points</span>
                 </div>
                 <div class="quick-stat-item">
-                    <span class="qs-number"
-                        th:text="${stats != null ? stats.totalDonations + stats.totalReceived : '0'}">0</span>
-                    <span class="qs-label">Impact</span>
+                    <span class="qs-number" th:text="${stats != null ? stats.activePosts : '0'}">0</span>
+                    <span class="qs-label">Active</span>
                 </div>
             </div>
         </div>

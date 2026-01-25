@@ -1,0 +1,16 @@
+.mouse-glow {
+    position: fixed;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.04) 40%, transparent 75%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    will-change: left, top;
+}
+
+/* Ensure body doesn't show scrollbars for the glow */
+body {
+    overflow-x: hidden;
+}

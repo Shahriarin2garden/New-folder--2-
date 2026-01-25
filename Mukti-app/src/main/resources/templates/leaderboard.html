@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | MUKTI APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link th:href="@{/css/global.css}" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-light: #34D399;
+            --primary-dark: #059669;
+            --secondary: #F59E0B;
+            --accent: #F97316;
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-pill: 50px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Inter', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
+            backdrop-filter: var(--glass-blur);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .leaderboard-title {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .leaderboard-title h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, white 30%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .leaderboard-title p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-list {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .donor-item {
+            display: grid;
+            grid-template-columns: 80px 1fr 100px;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+
+        .donor-item:last-child {
+            border-bottom: none;
+        }
+
+        .donor-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-muted);
+        }
+
+        .donor-item:nth-child(1) .rank {
+            color: #FFD700;
+            font-size: 2rem;
+        }
+
+        /* Gold */
+        .donor-item:nth-child(2) .rank {
+            color: #C0C0C0;
+        }
+
+        /* Silver */
+        .donor-item:nth-child(3) .rank {
+            color: #CD7F32;
+        }
+
+        /* Bronze */
+
+        .donor-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+        }
+
+        .donor-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .points-box {
+            text-align: right;
+        }
+
+        .points-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .points-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 24px;
+            opacity: 0.2;
+        }
+
+        @media (max-width: 600px) {
+            .donor-item {
+                padding: 20px;
+                grid-template-columns: 50px 1fr 80px;
+            }
+
+            .rank {
+                font-size: 1.2rem;
+            }
+
+            .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script th:src="@{/js/global.js}"></script>
+    <div class="container">
+        <nav class="header-nav">
+            <a th:href="@{/dashboard}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+            <div style="font-weight: 800; color: var(--primary-light);">MUKTI APP</div>
+        </nav>
+
+        <div class="leaderboard-title">
+            <h1>Donor Hall of Fame</h1>
+            <p>Celebrating those who share more than just food.</p>
+        </div>
+
+        <div class="leaderboard-list">
+            <div th:if="${#lists.isEmpty(topDonors)}" class="empty-state">
+                <i class="fas fa-trophy"></i>
+                <p>The leaderboard is currently empty. Start donating to be first!</p>
+            </div>
+
+            <div th:each="donor, iterStat : ${topDonors}" class="donor-item">
+                <div class="rank" th:text="${iterStat.count}">1</div>
+                <div class="donor-info">
+                    <div class="avatar" th:text="${#strings.substring(donor.name, 0, 1)}">S</div>
+                    <div>
+                        <div class="donor-name" th:text="${donor.name}">Sabbir Ahmed</div>
+                    </div>
+                </div>
+                <div class="points-box">
+                    <div class="points-value" th:text="${donor.points}">150</div>
+                    <div class="points-label">Points</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

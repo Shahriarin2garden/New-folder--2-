@@ -30,7 +30,8 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String permanentAddress;
 
-    private int points = 0;
+    @Column(name = "points")
+    private Integer points = 0;
 
     public User() {
     }
@@ -101,11 +102,11 @@ public class User {
         this.permanentAddress = permanentAddress;
     }
 
-    public int getPoints() {
-        return points;
+    public Integer getPoints() {
+        return points != null ? points : 0;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 }
