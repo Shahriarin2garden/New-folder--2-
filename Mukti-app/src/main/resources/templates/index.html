@@ -33,7 +33,7 @@
 
         body {
             background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
-                        url('https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+                        url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -183,38 +183,54 @@
 
         .theme-text {
             font-family: 'Hind Siliguri', sans-serif;
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: 700;
             line-height: 1.2;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
         }
 
         .mission-badge {
             display: inline-block;
-            background: rgba(220, 38, 38, 0.2);
-            border: 2px solid #DC2626;
-            color: #FCA5A5;
-            padding: 8px 20px;
+            background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+            border: 2px solid #FCA5A5;
+            color: white;
+            padding: 10px 24px;
             border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4),
+                        0 0 20px rgba(220, 38, 38, 0.3);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4),
+                            0 0 20px rgba(220, 38, 38, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(220, 38, 38, 0.6),
+                            0 0 30px rgba(220, 38, 38, 0.5);
+            }
         }
 
         .tagline {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            line-height: 1.6;
-            max-width: 600px;
+            margin-bottom: 35px;
+            line-height: 1.7;
+            max-width: 550px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         .highlight {
-            color: var(--primary-light);
+            color: #34D399;
             font-weight: 600;
         }
 
@@ -241,28 +257,27 @@
         }
 
         .btn-primary {
-            background: var(--gradient);
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             color: white;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
         }
 
         .btn-secondary {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border-color: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px);
-            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.6);
         }
 
         .stats-container {
@@ -273,32 +288,20 @@
         }
 
         .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
+            background: rgba(16, 185, 129, 0.12);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 15px;
+            padding: 30px 25px;
             text-align: center;
-            min-width: 180px;
+            min-width: 160px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient);
         }
 
         .stat-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
         }
 
         .stat-number {
@@ -805,22 +808,16 @@
 <!-- Hero Section -->
 <section class="hero" id="home">
     <div class="hero-content">
-        <div class="mission-badge">
-            <i class="fas fa-exclamation-triangle"></i> Fighting Food Waste
-        </div>
-        <h1 class="theme-text">মুক্তি - খাবার অপচয় থেকে মুক্তি</h1>
+        <h1 class="theme-text">মুক্তি</h1>
         <p class="tagline">
-            Every day, <span class="highlight">tons of food are wasted</span> while many go hungry. 
-            MUKTI connects surplus food with those in need, <span class="highlight">reducing waste and fighting hunger</span> in our community.
+            Connecting surplus food with those in need. <span class="highlight">Together, we eliminate waste and fight hunger</span>.
         </p>
 
         <div class="hero-buttons">
             <a th:href="@{/register}" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i>
-                Join Now - It's Free
+                Join Now
             </a>
             <a th:href="@{/login}" class="btn btn-secondary">
-                <i class="fas fa-sign-in-alt"></i>
                 Sign In
             </a>
         </div>
@@ -828,7 +825,7 @@
         <div class="stats-container">
             <div class="stat-card">
                 <span class="stat-number">2.5+</span>
-                <span class="stat-label">Tons Food Saved</span>
+                <span class="stat-label">Tons Saved</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number">850+</span>
@@ -836,11 +833,7 @@
             </div>
             <div class="stat-card">
                 <span class="stat-number">420+</span>
-                <span class="stat-label">Waste Prevented</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">98%</span>
-                <span class="stat-label">Satisfaction Rate</span>
+                <span class="stat-label">Donations</span>
             </div>
         </div>
     </div>
@@ -1128,22 +1121,7 @@
         `;
         document.head.appendChild(style);
 
-        // Auto-typing effect for tagline (optional)
-        const tagline = document.querySelector('.tagline');
-        const originalText = tagline.innerHTML;
-        tagline.innerHTML = '';
 
-        let charIndex = 0;
-        function typeWriter() {
-            if (charIndex < originalText.length) {
-                tagline.innerHTML += originalText.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeWriter, 20);
-            }
-        }
-
-        // Start typing after a delay
-        setTimeout(typeWriter, 1000);
     });
 </script>
 </body>
