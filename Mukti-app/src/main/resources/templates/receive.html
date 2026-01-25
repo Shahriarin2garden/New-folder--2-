@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Receive Food | MUKTI APP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -14,29 +17,31 @@
             --primary-dark: #059669;
             --secondary: #F59E0B;
             --accent: #F97316;
-            --dark: #1F2937;
-            --light: #F9FAFB;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-pill: 50px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', 'Inter', sans-serif;
         }
 
         body {
-            background:
-                linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
             background-attachment: fixed;
             min-height: 100vh;
-            color: white;
-            padding: 30px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
         }
 
         .container {
@@ -44,56 +49,58 @@
             margin: 0 auto;
         }
 
-        /* Header */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
         .header {
-            text-align: center;
-            margin-bottom: 40px;
+            padding: 40px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
             position: relative;
         }
 
         .back-btn {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-50%) translateX(-5px);
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 15px;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
         }
 
-        h2 i {
-            color: var(--secondary);
-            font-size: 2.2rem;
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-4px);
         }
 
-        /* Search Bar */
+        .header-content h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-content p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
         .search-wrapper {
-            max-width: 700px;
-            margin: 0 auto 40px;
+            margin-bottom: 32px;
             position: relative;
         }
 
@@ -102,69 +109,39 @@
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--primary-light);
             font-size: 1.1rem;
-            z-index: 2;
         }
 
         .search-input {
             width: 100%;
-            padding: 16px 20px 16px 50px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            font-size: 1rem;
+            padding: 16px 20px 16px 52px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
             color: white;
+            font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
         }
 
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
         .search-input:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        /* Food Container */
-        .food-container {
-            max-width: 900px;
-            margin: 0 auto 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-light);
         }
 
         .food-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            padding: 32px;
+            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .food-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient);
+            gap: 24px;
         }
 
         .food-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
         }
 
         .food-info {
@@ -172,209 +149,119 @@
         }
 
         .food-info p {
-            margin: 12px 0;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .food-info p i {
+            width: 20px;
+            color: var(--primary-light);
             font-size: 1rem;
         }
 
         .food-info b {
-            color: rgba(255, 255, 255, 0.9);
-            min-width: 100px;
+            color: var(--text-muted);
             font-weight: 600;
-            display: inline-block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 80px;
         }
 
-        .food-info span {
+        .food-name-tag {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
             color: white;
-            font-weight: 500;
+            display: block;
         }
 
-        .location-text {
-            color: var(--primary-light);
-            font-weight: 600;
-        }
-
-        /* Icons for different info */
-        .food-info p i.fa-utensils { color: #F59E0B; }
-        .food-info p i.fa-cubes { color: #3B82F6; }
-        .food-info p i.fa-map-marker-alt { color: #EF4444; }
-        .food-info p i.fa-clock { color: #6B7280; }
-        .food-info p i.fa-hourglass-end { color: #EF4444; }
-        .food-info p i.fa-user-circle { color: #10B981; }
-        .food-info p i.fa-phone-alt { color: #10B981; }
-
-        /* Donor Section */
-        .donor-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px dashed rgba(255, 255, 255, 0.1);
+        .donor-info {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
         }
 
         .donor-detail {
-            color: white;
-            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
+            gap: 8px;
         }
 
         .donor-detail a {
             color: var(--primary-light);
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-weight: 600;
         }
 
-        .donor-detail a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-
-        /* Receive Button */
         .receive-btn {
-            background: var(--gradient-warm);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: var(--radius-pill);
             cursor: pointer;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-            min-width: 180px;
-            justify-content: center;
+            white-space: nowrap;
         }
 
         .receive-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
         }
 
         .receive-btn:disabled {
-            background: #6B7280;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
             cursor: not-allowed;
-            opacity: 0.7;
-            transform: none !important;
+            box-shadow: none;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            margin: 40px 0;
+            padding: 64px;
+            color: var(--text-muted);
         }
 
         .empty-state i {
-            font-size: 4rem;
-            color: rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
         }
 
-        .empty-state p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.2rem;
-        }
-
-        /* Back Link */
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 40px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 15px 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 20px 15px;
-            }
-
-            h2 {
-                font-size: 2rem;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .back-btn {
-                position: relative;
-                display: inline-block;
-                margin-bottom: 20px;
-                transform: none;
-                top: 0;
-            }
-
             .food-card {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 25px;
+                align-items: stretch;
             }
 
             .receive-btn {
                 width: 100%;
-            }
-
-            .food-info b {
-                min-width: 90px;
+                justify-content: center;
             }
         }
 
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.8rem;
-            }
-
-            .search-input {
-                padding: 14px 20px 14px 45px;
-                font-size: 0.95rem;
-            }
-
-            .food-card {
-                padding: 25px 20px;
-            }
-
-            .food-info p {
-                font-size: 0.95rem;
-                flex-wrap: wrap;
-            }
-
-            .empty-state {
-                padding: 40px 20px;
-            }
-        }
-
-        /* Animation */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -388,138 +275,93 @@
 </head>
 
 <body>
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <a th:href="@{/dashboard}" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Dashboard
-        </a>
-        <h2><i class="fas fa-hand-holding-heart"></i> Available Food Donations</h2>
-    </div>
+    <div class="container fade-in">
+        <header class="header glass-panel">
+            <a th:href="@{/dashboard}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <div class="header-content">
+                <h1>Find Food</h1>
+                <p>Browse available food donations near you.</p>
+            </div>
+        </header>
 
-    <!-- Search Bar -->
-    <div class="search-wrapper fade-in">
-        <i class="fas fa-search"></i>
-        <input type="text" id="locationSearch" class="search-input"
-               placeholder="Search by location (e.g., Mirpur, Gulshan, Dhanmondi)...">
-    </div>
-
-    <!-- Food Container -->
-    <div class="food-container" id="foodContainer">
-        <!-- Empty State -->
-        <div th:if="${foods.size() == 0}" class="empty-state fade-in">
-            <i class="fas fa-box-open"></i>
-            <p>No food available right now. Check back soon or consider donating!</p>
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="locationSearch" class="search-input" placeholder="Search by location...">
         </div>
 
-        <!-- Food Cards -->
-        <div class="food-card fade-in" th:each="food : ${foods}" th:if="${!food.received}">
-            <div class="food-info">
-                <p><i class="fas fa-utensils"></i> <b>Food:</b> <span th:text="${food.foodName}">Item Name</span></p>
-                <p><i class="fas fa-cubes"></i> <b>Quantity:</b> <span th:text="${food.quantity} + ' Servings'">1 Servings</span></p>
-                <p><i class="fas fa-map-marker-alt"></i> <b>Location:</b> <span class="location-text" th:text="${food.location}">Location</span></p>
-                <p><i class="fas fa-clock"></i> <b>Cooked:</b> <span th:text="${#temporals.format(food.cookTime, 'dd MMM, hh:mm a')}">Time</span></p>
-                <p><i class="fas fa-hourglass-end"></i> <b>Expires:</b> <span th:text="${#temporals.format(food.expireTime, 'dd MMM, hh:mm a')}">Time</span></p>
-
-                <div class="donor-section">
-                    <p class="donor-detail">
-                        <i class="fas fa-user-circle"></i>
-                        Donor: <span th:text="${food.donorName != null && food.donorName != '' ? food.donorName : 'Anonymous'}">Donor Name</span>
-                    </p>
-                    <p class="donor-detail">
-                        <i class="fas fa-phone-alt"></i>
-                        Contact: <a th:href="'tel:' + ${food.donorPhone}" th:text="${food.donorPhone != null ? food.donorPhone : 'No Number'}">01XXXXXXX</a>
-                    </p>
-                </div>
+        <div class="food-container" id="foodContainer">
+            <div th:if="${foods.size() == 0}" class="empty-state glass-panel">
+                <i class="fas fa-box-open"></i>
+                <p>No donations available right now. Check back soon!</p>
             </div>
 
-            <button class="receive-btn" th:id="'btn-' + ${food.id}" th:onclick="'receiveFood(' + ${food.id} + ')'">
-                <i class="fas fa-check-circle"></i> <span th:id="'text-' + ${food.id}">Receive Food</span>
-            </button>
+            <div class="food-card glass-panel fade-in" th:each="food : ${foods}" th:if="${!food.received}">
+                <div class="food-info">
+                    <span class="food-name-tag" th:text="${food.foodName}">Item Name</span>
+                    <p><i class="fas fa-cubes"></i> <b>Quantity</b> <span th:text="${food.quantity} + ' Servings'">1
+                            Servings</span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <b>Location</b> <span class="location-text"
+                            th:text="${food.location}">Location</span></p>
+                    <p><i class="fas fa-clock"></i> <b>Cooked</b> <span
+                            th:text="${#temporals.format(food.cookTime, 'dd MMM, hh:mm a')}">Time</span></p>
+                    <p><i class="fas fa-hourglass-end"></i> <b>Expires</b> <span
+                            th:text="${#temporals.format(food.expireTime, 'dd MMM, hh:mm a')}">Time</span></p>
+
+                    <div class="donor-info">
+                        <span class="donor-detail"><i class="fas fa-user-circle"></i> Donor: <span
+                                th:text="${food.donorName != null && food.donorName != '' ? food.donorName : 'Anonymous'}">Donor</span></span>
+                        <span class="donor-detail"><i class="fas fa-phone"></i> Contact: <a
+                                th:href="'tel:' + ${food.donorPhone}"
+                                th:text="${food.donorPhone != null ? food.donorPhone : 'No Number'}">01XXXXXXX</a></span>
+                    </div>
+                </div>
+
+                <button class="receive-btn" th:id="'btn-' + ${food.id}" th:onclick="'receiveFood(' + ${food.id} + ')'">
+                    <i class="fas fa-hand-holding-heart"></i> <span th:id="'text-' + ${food.id}">Receive</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <a th:href="@{/dashboard}" class="back-link">← Back to Dashboard</a>
-</div>
-
-<script>
-    // Search Function - Fixed
-    document.getElementById('locationSearch').addEventListener('input', function() {
-        let input = this.value.toLowerCase();
-        let cards = document.getElementsByClassName('food-card');
-
-        for (let i = 0; i < cards.length; i++) {
-            let locationTag = cards[i].querySelector('.location-text');
-            if (locationTag) {
-                let locationValue = locationTag.textContent.toLowerCase();
-                if (locationValue.includes(input)) {
-                    cards[i].style.display = "flex";
-                } else {
-                    cards[i].style.display = "none";
+    <script>
+        document.getElementById('locationSearch').addEventListener('input', function () {
+            let input = this.value.toLowerCase();
+            let cards = document.getElementsByClassName('food-card');
+            for (let i = 0; i < cards.length; i++) {
+                let locationTag = cards[i].querySelector('.location-text');
+                if (locationTag) {
+                    let locationValue = locationTag.textContent.toLowerCase();
+                    cards[i].style.display = locationValue.includes(input) ? "flex" : "none";
                 }
             }
-        }
-    });
+        });
 
-    // Receive Food Function
-    window.receiveFood = async function(id) {
-        const btn = document.getElementById('btn-' + id);
-        const text = document.getElementById('text-' + id);
-
-        if(confirm("Do you want to request this food? Please make sure you can collect it.")) {
-            btn.disabled = true;
-            text.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            try {
-                const response = await fetch('/food/receive/' + id, { method: 'POST' });
-                if (response.ok) {
-                    // Change button to success state
-                    btn.style.background = "linear-gradient(135deg, #059669 0%, #047857 100%)";
-                    text.innerHTML = '<i class="fas fa-check"></i> Success!';
-
-                    alert("Success! The food is yours. Please call the donor to coordinate collection.");
-
-                    // Reload page after 2 seconds
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-                } else {
-                    alert("Something went wrong. Please try again.");
+        window.receiveFood = async function (id) {
+            const btn = document.getElementById('btn-' + id);
+            const text = document.getElementById('text-' + id);
+            if (confirm("Do you want to request this food? Please make sure you can collect it.")) {
+                btn.disabled = true;
+                text.innerText = 'Processing...';
+                try {
+                    const response = await fetch('/food/receive/' + id, { method: 'POST' });
+                    if (response.ok) {
+                        btn.style.background = "#10B981";
+                        text.innerText = 'Success!';
+                        alert("Success! The food is yours. Please call the donor to coordinate collection.");
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                        btn.disabled = false;
+                        text.innerText = "Receive";
+                    }
+                } catch (e) {
+                    alert("Connection error.");
                     btn.disabled = false;
-                    text.innerHTML = "Receive Food";
+                    text.innerText = "Receive";
                 }
-            } catch (e) {
-                alert("Connection error. Please check your internet connection.");
-                btn.disabled = false;
-                text.innerHTML = "Receive Food";
             }
-        }
-    };
-
-    // Add input focus effect
-    document.getElementById('locationSearch').addEventListener('focus', function() {
-        this.parentElement.style.transform = 'translateY(-3px)';
-    });
-
-    document.getElementById('locationSearch').addEventListener('blur', function() {
-        this.parentElement.style.transform = 'translateY(0)';
-    });
-
-    // Add animation to cards
-    document.addEventListener('DOMContentLoaded', function() {
-        const cards = document.querySelectorAll('.food-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = (index * 0.1) + 's';
-        });
-
-        // Add keyboard shortcut for search (Ctrl+F)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                document.getElementById('locationSearch').focus();
-            }
-        });
-    });
-</script>
+        };
+    </script>
 </body>
+
 </html>

@@ -1,263 +1,326 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages - MUKTI</title>
+    <title>Messages | MUKTI APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #10B981;
+            --primary-light: #34D399;
+            --primary-dark: #059669;
+            --secondary: #F59E0B;
+            --accent: #F97316;
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-pill: 50px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Outfit', 'Inter', sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(circle at bottom right, #1e293b, #0f172a);
+            background-attachment: fixed;
             min-height: 100vh;
-            padding: 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+        .chat-header {
+            padding: 32px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .header h1 {
-            font-size: 24px;
+        .chat-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .chat-header h1 i {
+            color: var(--primary-light);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .chat-section {
+            padding: 32px 40px;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        .conversation-list {
+        .conv-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
         }
 
-        .conversation-item {
+        .conv-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
             text-decoration: none;
             color: inherit;
+            transition: all 0.3s ease;
         }
 
-        .conversation-item:hover {
-            background: #f5f5f5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .conv-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
-            font-weight: bold;
-            margin-right: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 20px;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
-        .conversation-details {
+        .avatar.receiver {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+
+        .details {
             flex: 1;
             min-width: 0;
         }
 
-        .conversation-header {
+        .top-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
-        .conversation-name {
+        .name {
             font-weight: 600;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .food-name {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .last-message {
-            color: #888;
-            font-size: 14px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .conversation-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
+            font-size: 1rem;
+            color: white;
         }
 
         .time {
-            font-size: 12px;
-            color: #888;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .food-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .role-tag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-donor {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-light);
+        }
+
+        .tag-receiver {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--secondary);
+        }
+
+        .food-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .last-msg {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .unread-badge {
-            background: #667eea;
+            background: var(--primary);
             color: white;
-            border-radius: 12px;
-            padding: 3px 10px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .status-badge {
             font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 500;
-        }
-
-        .status-received {
-            background: #4caf50;
-            color: white;
-        }
-
-        .status-available {
-            background: #ff9800;
-            color: white;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 12px;
         }
 
         .empty-state {
+            padding: 40px;
             text-align: center;
-            padding: 60px 20px;
-            color: #888;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--glass-border);
         }
 
-        .empty-state svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
+        @media (max-width: 600px) {
 
-        .empty-state h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .empty-state p {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: transform 0.3s;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
+            .chat-header,
+            .chat-section {
+                padding: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
+    <div class="container glass-panel fade-in">
+        <header class="chat-header">
             <h1>
-                <span>💬</span> Messages
+                <i class="fas fa-comment-dots"></i>
+                Messages
             </h1>
-            <div class="nav-links">
-                <a href="/dashboard">Dashboard</a>
-                <a href="/food/history">History</a>
-                <a href="/logout">Logout</a>
+            <a href="/dashboard" class="nav-btn">Dashboard</a>
+        </header>
+
+        <!-- Donating -->
+        <div class="chat-section">
+            <h2 class="section-title">Donations</h2>
+            <div class="conv-list">
+                <div th:if="${donations == null or donations.isEmpty()}" class="empty-state">
+                    No active donation chats
+                </div>
+
+                <a th:each="conv : ${donations}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherUserPhone=' + ${conv.otherUserPhone}}"
+                    class="conv-item">
+                    <div class="avatar" th:text="${conv.otherUserName.substring(0, 1).toUpperCase()}">U</div>
+                    <div class="details">
+                        <div class="top-row">
+                            <span class="name" th:text="${conv.otherUserName}">User</span>
+                            <span class="time" th:text="${#temporals.format(conv.lastMessageTime, 'HH:mm')}">Time</span>
+                        </div>
+                        <div class="food-info">
+                            <span class="role-tag tag-donor">DONOR</span>
+                            <span class="food-name" th:text="${conv.foodName}">Food Name</span>
+                        </div>
+                        <div class="last-msg" th:text="${conv.lastMessage}">Last message...</div>
+                    </div>
+                    <div th:if="${conv.unreadCount > 0}" class="unread-badge" th:text="${conv.unreadCount}">1</div>
+                </a>
             </div>
         </div>
 
-        <div class="content">
-            <div class="conversation-list" th:if="${conversations != null and !conversations.isEmpty()}">
-                <a th:each="conv : ${conversations}" 
-                   th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone}}"
-                   class="conversation-item">
-                    <div class="avatar" th:text="${conv.otherUserName.substring(0, 1).toUpperCase()}">A</div>
-                    <div class="conversation-details">
-                        <div class="conversation-header">
-                            <span class="conversation-name" th:text="${conv.otherUserName}">User Name</span>
-                        </div>
-                        <div class="food-name">
-                            🍲 <span th:text="${conv.foodName}">Food Name</span>
-                        </div>
-                        <div class="last-message" th:text="${conv.lastMessage}">Last message...</div>
-                    </div>
-                    <div class="conversation-meta">
-                        <span class="time" th:text="${#temporals.format(conv.lastMessageTime, 'MMM dd, HH:mm')}">Time</span>
-                        <span th:if="${conv.unreadCount > 0}" class="unread-badge" th:text="${conv.unreadCount}">0</span>
-                        <span th:if="${conv.isReceived}" class="status-badge status-received">Received</span>
-                        <span th:if="${!conv.isReceived}" class="status-badge status-available">Available</span>
-                    </div>
-                </a>
-            </div>
+        <!-- Receiving -->
+        <div class="chat-section" style="border-top: 1px solid var(--glass-border);">
+            <h2 class="section-title">Received</h2>
+            <div class="conv-list">
+                <div th:if="${receivals == null or receivals.isEmpty()}" class="empty-state">
+                    No active request chats
+                </div>
 
-            <div class="empty-state" th:if="${conversations == null or conversations.isEmpty()}">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <h2>No Messages Yet</h2>
-                <p>Start donating or receiving food to chat with others!</p>
-                <a href="/dashboard" class="btn">Go to Dashboard</a>
+                <a th:each="conv : ${receivals}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherUserPhone=' + ${conv.otherUserPhone}}"
+                    class="conv-item">
+                    <div class="avatar receiver" th:text="${conv.otherUserName.substring(0, 1).toUpperCase()}">U</div>
+                    <div class="details">
+                        <div class="top-row">
+                            <span class="name" th:text="${conv.otherUserName}">User</span>
+                            <span class="time" th:text="${#temporals.format(conv.lastMessageTime, 'HH:mm')}">Time</span>
+                        </div>
+                        <div class="food-info">
+                            <span class="role-tag tag-receiver">RECEIVER</span>
+                            <span class="food-name" th:text="${conv.foodName}">Food Name</span>
+                        </div>
+                        <div class="last-msg" th:text="${conv.lastMessage}">Last message...</div>
+                    </div>
+                    <div th:if="${conv.unreadCount > 0}" class="unread-badge" th:text="${conv.unreadCount}">1</div>
+                </a>
             </div>
         </div>
     </div>
 </body>
+
 </html>

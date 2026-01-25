@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donate Food | MUKTI APP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary: #10B981;
@@ -13,991 +16,435 @@
             --primary-dark: #059669;
             --secondary: #F59E0B;
             --accent: #F97316;
-            --dark: #1F2937;
-            --light: #F9FAFB;
-            --gray: #6B7280;
-            --light-gray: #E5E7EB;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
-            --gradient-overlay: linear-gradient(to right, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-pill: 50px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', 'Inter', sans-serif;
         }
 
         body {
-            background:
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
             background-attachment: fixed;
             min-height: 100vh;
-            padding: 20px;
-            color: white;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        /* Header with Glass Effect */
-        .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px 40px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient);
+        .header {
+            padding: 40px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
         .back-btn {
-            width: 55px;
-            height: 55px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border-radius: 15px;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             color: white;
-            font-size: 1.3rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
-            flex-shrink: 0;
-            z-index: 1;
+            border: 1px solid var(--glass-border);
         }
 
         .back-btn:hover {
-            transform: translateX(-5px);
-            background: rgba(255, 255, 255, 0.3);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .header-content {
-            flex: 1;
-            position: relative;
-            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-4px);
         }
 
         .header-content h1 {
-            font-size: 2.2rem;
-            color: white;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header-content h1 i {
-            color: var(--secondary);
-            font-size: 2rem;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
 
         .header-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
         }
 
-        .header-stats {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .stat:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .stat i {
-            color: var(--secondary);
-            font-size: 1.4rem;
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: white;
-            font-size: 1.3rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .stat-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
-        }
-
-        /* Main Layout */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 32px;
         }
 
-        @media (max-width: 900px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-        }
-
-        /* Left Panel - Info */
         .info-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 32px;
             height: fit-content;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .info-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient);
         }
 
         .section-title {
-            font-size: 1.6rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: white;
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 12px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--gradient);
-            border-radius: 2px;
+            margin-bottom: 24px;
+            color: var(--primary-light);
+            letter-spacing: -0.5px;
         }
 
         .tips-list {
             list-style: none;
-            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .tips-list li {
             display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tips-list li:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.12);
-            border-color: var(--primary);
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
         }
 
         .tip-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient);
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-light);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .tip-content h4 {
-            color: white;
-            margin-bottom: 5px;
-            font-size: 1rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
         .tip-content p {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
-        .impact-card {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-card::before {
-            content: '♻️';
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 3rem;
-            opacity: 0.3;
-        }
-
-        .impact-title {
-            font-size: 1.3rem;
-            color: #FDE68A;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .impact-text {
-            color: #FDE68A;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Right Panel - Form */
         .form-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
             padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
         }
 
-        .form-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-warm);
-        }
-
-        .form-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-title i {
-            color: var(--secondary);
-            font-size: 1.6rem;
-        }
-
-        .form-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        /* Alert Messages */
-        .alert {
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-left: 4px solid;
-            backdrop-filter: blur(5px);
-        }
-
-        .alert-error {
-            background: rgba(220, 38, 38, 0.2);
-            color: #FECACA;
-            border-left-color: #DC2626;
-        }
-
-        .alert-error i {
-            color: #FECACA;
-            font-size: 1.2rem;
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #A7F3D0;
-            border-left-color: #10B981;
-        }
-
-        .alert-success i {
-            color: #A7F3D0;
-            font-size: 1.2rem;
-        }
-
-        /* Form Elements */
         .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .form-label {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             margin-bottom: 12px;
             font-weight: 600;
-            color: white;
-            font-size: 1rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-label i {
-            color: var(--secondary);
-            font-size: 1.1rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .required {
-            color: #F87171;
-            margin-left: 3px;
-        }
-
-        .optional {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            margin-left: 8px;
-            font-weight: 400;
+            font-size: 0.95rem;
+            color: var(--text-muted);
         }
 
         .form-control {
             width: 100%;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
             font-size: 1rem;
-            transition: all 0.3s ease;
             color: white;
-            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            outline: none;
         }
 
         .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-            line-height: 1.5;
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 24px;
         }
 
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-        }
-
-        /* Quantity Input with Stepper */
-        .quantity-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-btn {
-            width: 45px;
-            height: 45px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .quantity-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .quantity-input {
-            flex: 1;
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 10px;
-            padding: 12px;
-        }
-
-        /* Donate Button */
-        .donate-btn {
-            width: 100%;
-            padding: 18px;
-            background: var(--gradient-warm);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .donate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
-        }
-
-        .donate-btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* Food Type Badges */
         .food-types {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .food-type-badge {
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
             cursor: pointer;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
         }
 
-        .food-type-badge:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: var(--primary);
-            color: white;
-        }
-
+        .food-type-badge:hover,
         .food-type-badge.active {
-            background: var(--gradient);
+            background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        .footer-links {
+        .quantity-container {
             display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quantity-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .donate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-pill);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
         }
 
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.3);
         }
 
-        .footer-links a:hover {
-            color: var(--primary);
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            .header {
-                padding: 20px;
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-
-            .back-btn {
-                align-self: flex-start;
-            }
-
-            .header-content h1 {
-                font-size: 1.8rem;
-            }
-
-            .header-stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .info-panel, .form-panel {
-                padding: 25px;
-            }
-
-            .form-title {
-                font-size: 1.6rem;
-            }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        @media (max-width: 480px) {
-            .header-content h1 {
-                font-size: 1.5rem;
-            }
-
-            .info-panel, .form-panel {
-                padding: 20px;
-            }
-
-            .form-title {
-                font-size: 1.4rem;
-            }
-
-            .form-group {
-                margin-bottom: 22px;
-            }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-light);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        /* Animation for success */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-in {
-            animation: fadeIn 0.5s ease;
+        @media (max-width: 800px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
-<div class="container animate-in">
-    <!-- Header -->
-    <div class="header">
-        <a th:href="@{/dashboard}" class="back-btn">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <div class="header-content">
-            <h1><i class="fas fa-heart-circle-check"></i> Donate Food</h1>
-            <p>Share your surplus food and create meaningful impact in your community. Every meal counts!</p>
-            <div class="header-stats">
-                <div class="stat">
-                    <i class="fas fa-utensils"></i>
-                    <div>
-                        <div class="stat-value">1,250+</div>
-                        <div class="stat-label">Meals Donated</div>
-                    </div>
-                </div>
-                <div class="stat">
-                    <i class="fas fa-users"></i>
-                    <div>
-                        <div class="stat-value">500+</div>
-                        <div class="stat-label">Lives Touched</div>
-                    </div>
-                </div>
-                <div class="stat">
-                    <i class="fas fa-leaf"></i>
-                    <div>
-                        <div class="stat-value">2.5K kg</div>
-                        <div class="stat-label">Food Saved</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Layout -->
-    <div class="main-layout">
-        <!-- Left Panel - Information -->
-        <div class="info-panel">
-            <h2 class="section-title">Donation Guidelines</h2>
-
-            <ul class="tips-list">
-                <li>
-                    <div class="tip-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="tip-content">
-                        <h4>Fresh & Safe Food Only</h4>
-                        <p>Donate food that is freshly prepared and safe for consumption. Avoid expired or spoiled items.</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="tip-icon">
-                        <i class="fas fa-temperature-high"></i>
-                    </div>
-                    <div class="tip-content">
-                        <h4>Proper Packaging</h4>
-                        <p>Use clean, airtight containers. Hot food should be kept hot, cold food kept cold during transport.</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="tip-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="tip-content">
-                        <h4>Timely Pickup</h4>
-                        <p>Food should be available for pickup within 4-6 hours of posting to ensure freshness.</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="tip-icon">
-                        <i class="fas fa-info-circle"></i>
-                    </div>
-                    <div class="tip-content">
-                        <h4>Clear Information</h4>
-                        <p>Mention food name and any important details to help recipients make informed choices.</p>
-                    </div>
-                </li>
-            </ul>
-
-            <div class="impact-card">
-                <h3 class="impact-title">Your Impact Matters</h3>
-                <p class="impact-text">
-                    Each food donation not only feeds someone in need but also reduces food waste.
-                    Together, we're creating a sustainable community where no food goes to waste
-                    and no one sleeps hungry.
-                </p>
+    <div class="container fade-in">
+        <!-- Header -->
+        <div class="header glass-panel">
+            <a th:href="@{/dashboard}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <div class="header-content">
+                <h1>Donate Food</h1>
+                <p>Share surplus meals with people in your community.</p>
             </div>
         </div>
 
-        <!-- Right Panel - Donation Form -->
-        <div class="form-panel">
-            <h2 class="form-title"><i class="fas fa-pencil-alt"></i> Food Details</h2>
-            <p class="form-subtitle">Fill in the details about the food you'd like to donate</p>
-
-            <!-- Alert Messages -->
-            <div th:if="${error}" class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i>
-                <span th:text="${error}">Error message</span>
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <div class="info-panel glass-panel">
+                <h2 class="section-title">Guidelines</h2>
+                <ul class="tips-list">
+                    <li>
+                        <div class="tip-icon"><i class="fas fa-check"></i></div>
+                        <div class="tip-content">
+                            <h4>Fresh Food</h4>
+                            <p>Only share food that is safe and fresh to consume.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tip-icon"><i class="fas fa-box"></i></div>
+                        <div class="tip-content">
+                            <h4>Packaging</h4>
+                            <p>Use clean containers and mention if it's hot or cold.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tip-icon"><i class="fas fa-clock"></i></div>
+                        <div class="tip-content">
+                            <h4>Timely</h4>
+                            <p>Coordinate pickup within 4-6 hours for best freshness.</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
-            <div th:if="${success}" class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                <span th:text="${success}">Success message</span>
-            </div>
-
-            <!-- Donation Form -->
-            <form th:action="@{/food/donate}" method="post">
-                <!-- Food Name -->
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-utensils"></i> Food Name <span class="required">*</span>
-                    </label>
-                    <input type="text" name="foodName" class="form-control"
-                           placeholder="e.g., Chicken Biryani, Vegetable Curry, Mixed Rice" required
-                           th:value="${donation?.foodName}">
-                    <div class="food-types">
-                        <span class="food-type-badge" data-food="Biryani">Biryani</span>
-                        <span class="food-type-badge" data-food="Rice">Rice</span>
-                        <span class="food-type-badge" data-food="Curry">Curry</span>
-                        <span class="food-type-badge" data-food="Vegetables">Vegetables</span>
-                        <span class="food-type-badge" data-food="Bread">Bread</span>
-                        <span class="food-type-badge" data-food="Dessert">Dessert</span>
-                    </div>
+            <div class="form-panel glass-panel">
+                <div th:if="${error}" class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i><span th:text="${error}">Error</span>
+                </div>
+                <div th:if="${success}" class="alert alert-success">
+                    <i class="fas fa-check-circle"></i><span th:text="${success}">Success</span>
                 </div>
 
-                <!-- Description (Optional) -->
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-align-left"></i> Description <span class="optional">(Optional)</span>
-                    </label>
-                    <textarea name="description" class="form-control"
-                              placeholder="Add any extra details (ingredients, taste, special notes, etc.)..."
-                              th:text="${donation?.description}"></textarea>
-                </div>
-
-                <!-- Quantity and Location -->
-                <div class="form-row">
+                <form th:action="@{/food/donate}" method="post">
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-weight-hanging"></i> Quantity <span class="required">*</span>
-                        </label>
-                        <div class="quantity-container">
-                            <button type="button" class="quantity-btn" id="decrease-qty">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" id="quantity" name="quantity" class="form-control quantity-input"
-                                   placeholder="Number of servings" min="1" max="100" value="4" required
-                                   th:value="${donation?.quantity}">
-                            <button type="button" class="quantity-btn" id="increase-qty">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                        <label class="form-label">Food Name</label>
+                        <input type="text" name="foodName" class="form-control" placeholder="e.g., Chicken Biryani"
+                            required th:value="${donation?.foodName}">
+                        <div class="food-types">
+                            <span class="food-type-badge" data-food="Biryani">Biryani</span>
+                            <span class="food-type-badge" data-food="Rice">Rice</span>
+                            <span class="food-type-badge" data-food="Curry">Curry</span>
+                            <span class="food-type-badge" data-food="Vegetables">Vegetables</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-map-marker-alt"></i> Location <span class="required">*</span>
-                        </label>
-                        <input type="text" name="location" class="form-control"
-                               placeholder="e.g., Motijheel, Dhaka" required
-                               th:value="${donation?.location}">
+                        <label class="form-label">Description (Optional)</label>
+                        <textarea name="description" class="form-control"
+                            placeholder="Add some details about the food..." style="min-height: 100px;"
+                            th:text="${donation?.description}"></textarea>
                     </div>
-                </div>
 
-                <!-- Cook Time and Expire Time -->
-                <div class="form-row">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Quantity</label>
+                            <div class="quantity-container">
+                                <button type="button" class="quantity-btn" id="decrease-qty"><i
+                                        class="fas fa-minus"></i></button>
+                                <input type="number" id="quantity" name="quantity" class="form-control"
+                                    style="text-align: center;" min="1" max="100" value="4" required
+                                    th:value="${donation?.quantity}">
+                                <button type="button" class="quantity-btn" id="increase-qty"><i
+                                        class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control" placeholder="e.g., Gulshan, Dhaka"
+                                required th:value="${donation?.location}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Cook Time</label>
+                            <input type="datetime-local" name="cookTime" class="form-control" required
+                                th:value="${donation?.cookTime}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expire Time</label>
+                            <input type="datetime-local" name="expireTime" class="form-control" required
+                                th:value="${donation?.expireTime}">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-clock"></i> Cook Time <span class="required">*</span>
-                        </label>
-                        <input type="datetime-local" name="cookTime" class="form-control" required
-                               th:value="${donation?.cookTime}">
+                        <label class="form-label">Phone (Optional)</label>
+                        <input type="tel" name="contactPhone" class="form-control" placeholder="01XXXXXXXXX"
+                            th:value="${donation?.contactPhone}">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-hourglass-end"></i> Expire Time <span class="required">*</span>
-                        </label>
-                        <input type="datetime-local" name="expireTime" class="form-control" required
-                               th:value="${donation?.expireTime}">
-                    </div>
-                </div>
-
-                <!-- Contact Info (Optional) -->
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-phone"></i> Contact Phone <span class="optional">(Optional)</span>
-                    </label>
-                    <input type="tel" name="contactPhone" class="form-control"
-                           placeholder="Phone number for pickup coordination"
-                           th:value="${donation?.contactPhone}">
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="donate-btn">
-                    <i class="fas fa-heart"></i> Post Donation
-                </button>
-            </form>
+                    <button type="submit" class="donate-btn">
+                        Post Donation
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-links">
-            <a th:href="@{/about}">About Us</a>
-            <a th:href="@{/how-it-works}">How It Works</a>
-            <a th:href="@{/privacy}">Privacy Policy</a>
-            <a th:href="@{/contact}">Contact</a>
-            <a th:href="@{/faq}">FAQ</a>
-        </div>
-        <p>&copy; 2024 MUKTI APP. Fighting hunger, reducing waste. Every meal matters.</p>
-    </div>
-</div>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const expire = new Date(now.getTime() + 6 * 60 * 60 * 1000);
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set default datetime values
-        const now = new Date();
-        const expireTime = new Date(now.getTime() + 6 * 60 * 60 * 1000); // 6 hours later
+            function format(date) {
+                const pad = (n) => n.toString().padStart(2, '0');
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+            }
 
-        function formatDateTime(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
+            const cookInput = document.querySelector('input[name="cookTime"]');
+            const expireInput = document.querySelector('input[name="expireTime"]');
 
-        const cookTimeInput = document.querySelector('input[name="cookTime"]');
-        const expireTimeInput = document.querySelector('input[name="expireTime"]');
-        const quantityInput = document.getElementById('quantity');
+            if (cookInput && !cookInput.value) cookInput.value = format(now);
+            if (expireInput && !expireInput.value) expireInput.value = format(expire);
 
-        // Only set default values if inputs are empty
-        if (cookTimeInput && !cookTimeInput.value) {
-            cookTimeInput.value = formatDateTime(now);
-        }
+            // Stepper
+            const qty = document.getElementById('quantity');
+            document.getElementById('decrease-qty')?.addEventListener('click', () => { if (qty.value > 1) qty.value--; });
+            document.getElementById('increase-qty')?.addEventListener('click', () => { if (qty.value < 100) qty.value++; });
 
-        if (expireTimeInput && !expireTimeInput.value) {
-            expireTimeInput.value = formatDateTime(expireTime);
-        }
-
-        // Quantity stepper buttons
-        const decreaseBtn = document.getElementById('decrease-qty');
-        const increaseBtn = document.getElementById('increase-qty');
-
-        if (decreaseBtn && increaseBtn && quantityInput) {
-            decreaseBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (value > 1) {
-                    quantityInput.value = value - 1;
-                }
-            });
-
-            increaseBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (value < 100) {
-                    quantityInput.value = value + 1;
-                }
-            });
-        }
-
-        // Food type badges
-        const foodTypeBadges = document.querySelectorAll('.food-type-badge');
-        const foodNameInput = document.querySelector('input[name="foodName"]');
-
-        foodTypeBadges.forEach(badge => {
-            badge.addEventListener('click', function() {
-                // Remove active class from all badges
-                foodTypeBadges.forEach(b => b.classList.remove('active'));
-
-                // Add active class to clicked badge
-                this.classList.add('active');
-
-                // Update food name input
-                if (foodNameInput) {
-                    const currentValue = foodNameInput.value.trim();
-                    const foodType = this.getAttribute('data-food');
-
-                    if (currentValue === '' || currentValue.split(' ').length < 2) {
-                        foodNameInput.value = foodType;
-                    } else {
-                        foodNameInput.value = currentValue + ' ' + foodType;
-                    }
-                    foodNameInput.focus();
-                }
+            // Badges
+            document.querySelectorAll('.food-type-badge').forEach(badge => {
+                badge.addEventListener('click', function () {
+                    document.querySelectorAll('.food-type-badge').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const input = document.querySelector('input[name="foodName"]');
+                    if (input) input.value = this.getAttribute('data-food');
+                });
             });
         });
-
-        // Form validation
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                const cookTime = new Date(cookTimeInput.value);
-                const expireTime = new Date(expireTimeInput.value);
-                const currentTime = new Date();
-
-                // Validate cook time is not in the future
-                if (cookTime > currentTime) {
-                    e.preventDefault();
-                    alert('Cook time cannot be in the future. Please adjust the time.');
-                    cookTimeInput.focus();
-                    return;
-                }
-
-                // Validate expire time is after cook time
-                if (expireTime <= cookTime) {
-                    e.preventDefault();
-                    alert('Expire time must be after cook time. Please adjust the time.');
-                    expireTimeInput.focus();
-                    return;
-                }
-
-                // Validate expire time is not too far in the future (max 24 hours)
-                const maxExpireTime = new Date(cookTime.getTime() + 24 * 60 * 60 * 1000);
-                if (expireTime > maxExpireTime) {
-                    e.preventDefault();
-                    alert('Food cannot be available for more than 24 hours after cooking. Please adjust the expire time.');
-                    expireTimeInput.focus();
-                    return;
-                }
-            });
-        }
-
-        // Add input focus effects
-        const inputs = document.querySelectorAll('.form-control');
-        inputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.parentElement.classList.add('active');
-            });
-
-            input.addEventListener('blur', function() {
-                this.parentElement.parentElement.classList.remove('active');
-            });
-        });
-    });
-</script>
+    </script>
 </body>
+
 </html>

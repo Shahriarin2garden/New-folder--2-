@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MUKTI APP | Fight Hunger, Reduce Waste - সবার জন্য খাবার</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary: #10B981;
@@ -25,6 +28,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         html {
@@ -32,8 +36,8 @@
         }
 
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
-                        url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -92,10 +96,13 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
                 text-shadow: 0 0 10px var(--primary-light);
             }
+
             50% {
                 transform: scale(1.1);
                 text-shadow: 0 0 20px var(--primary-light);
@@ -175,6 +182,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -205,18 +213,21 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4),
-                        0 0 20px rgba(220, 38, 38, 0.3);
+                0 0 20px rgba(220, 38, 38, 0.3);
             animation: badgePulse 3s ease-in-out infinite;
         }
 
         @keyframes badgePulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4),
-                            0 0 20px rgba(220, 38, 38, 0.3);
+                    0 0 20px rgba(220, 38, 38, 0.3);
             }
+
             50% {
                 box-shadow: 0 10px 40px rgba(220, 38, 38, 0.6),
-                            0 0 30px rgba(220, 38, 38, 0.5);
+                    0 0 30px rgba(220, 38, 38, 0.5);
             }
         }
 
@@ -566,7 +577,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1%, transparent 1%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1%, transparent 1%);
             background-size: 50px 50px;
             animation: moveBackground 20s linear infinite;
             opacity: 0.3;
@@ -576,6 +587,7 @@
             0% {
                 transform: translate(0, 0);
             }
+
             100% {
                 transform: translate(50px, 50px);
             }
@@ -743,7 +755,8 @@
                 font-size: 2.2rem;
             }
 
-            .features-grid, .steps-container {
+            .features-grid,
+            .steps-container {
                 grid-template-columns: 1fr;
             }
 
@@ -784,308 +797,319 @@
         }
     </style>
 </head>
+
 <body>
-<!-- Floating Food Animation -->
-<div class="floating-food" id="floatingFood"></div>
+    <!-- Mission focus: removed distracting fancy background animations -->
 
-<!-- Navigation Bar -->
-<nav class="navbar" id="navbar">
-    <a href="#" class="logo">
-        <i class="fas fa-hands-helping"></i>
-        MUKTI APP
-    </a>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">
+            <i class="fas fa-hands-helping"></i>
+            MUKTI APP
+        </a>
 
-    <div class="nav-links">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#testimonials" class="nav-link">Testimonials</a>
-        <a th:href="@{/login}" class="nav-link">Login</a>
-        <a th:href="@{/register}" class="cta-btn">Get Started</a>
-    </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="hero" id="home">
-    <div class="hero-content">
-        <h1 class="theme-text">মুক্তি</h1>
-        <p class="tagline">
-            Connecting surplus food with those in need. <span class="highlight">Together, we eliminate waste and fight hunger</span>.
-        </p>
-
-        <div class="hero-buttons">
-            <a th:href="@{/register}" class="btn btn-primary">
-                Join Now
-            </a>
-            <a th:href="@{/login}" class="btn btn-secondary">
-                Sign In
-            </a>
+        <div class="nav-links">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#testimonials" class="nav-link">Testimonials</a>
+            <a th:href="@{/login}" class="nav-link">Login</a>
+            <a th:href="@{/register}" class="cta-btn">Get Started</a>
         </div>
+    </nav>
 
-        <div class="stats-container">
-            <div class="stat-card">
-                <span class="stat-number">2.5+</span>
-                <span class="stat-label">Tons Saved</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">850+</span>
-                <span class="stat-label">People Fed</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">420+</span>
-                <span class="stat-label">Donations</span>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="features" id="features">
-    <h2 class="section-title">Our Mission Against Food Waste</h2>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i class="fas fa-recycle"></i>
-            </div>
-            <h3 class="feature-title">Zero Waste Goal</h3>
-            <p class="feature-desc">Transform surplus food into meals for those in need. Every donation prevents waste and feeds a family.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i class="fas fa-heart"></i>
-            </div>
-            <h3 class="feature-title">Community Care</h3>
-            <p class="feature-desc">Build stronger communities by ensuring no one goes hungry while perfectly good food goes to waste.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i class="fas fa-leaf"></i>
-            </div>
-            <h3 class="feature-title">Environmental Impact</h3>
-            <p class="feature-desc">Reduce landfill waste and carbon footprint. Every meal saved helps our planet and our people.</p>
-        </div>
-    </div>
-</section>
-
-<!-- How It Works -->
-<section class="how-it-works" id="how-it-works">
-    <h2 class="section-title">How It Works</h2>
-    <div class="steps-container">
-        <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-                <h3 class="step-title">Create Account</h3>
-                <p class="step-desc">Sign up as a donor or receiver with your basic information. Verification takes just minutes.</p>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-                <h3 class="step-title">Connect & Share</h3>
-                <p class="step-desc">Donors post available food. Receivers browse nearby donations and make requests instantly.</p>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-                <h3 class="step-title">Make Impact</h3>
-                <p class="step-desc">Connect with each other, arrange pickup, and share meals with those in need. Track your impact in real-time.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Testimonials -->
-<section class="testimonials" id="testimonials">
-    <h2 class="section-title">What Our Users Say</h2>
-    <div class="testimonial-slider">
-        <div class="testimonial-card">
-            <p class="testimonial-text">
-                "MUKTI APP has transformed how I handle excess food from my restaurant. Instead of wasting, I'm now feeding families in need. It's incredibly rewarding!"
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="theme-text">মুক্তি</h1>
+            <p class="tagline">
+                Connecting surplus food with those in need. <span class="highlight">Together, we eliminate waste and
+                    fight hunger</span>.
             </p>
-            <div class="testimonial-author">
-                <div class="author-avatar">R</div>
-                <div class="author-info">
-                    <h4>Rahim Ahmed</h4>
-                    <p>Restaurant Owner & Donor</p>
+
+            <div class="hero-buttons">
+                <a th:href="@{/register}" class="btn btn-primary">
+                    Join Now
+                </a>
+                <a th:href="@{/login}" class="btn btn-secondary">
+                    Sign In
+                </a>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number">2.5+</span>
+                    <span class="stat-label">Tons Saved</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">850+</span>
+                    <span class="stat-label">People Fed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">420+</span>
+                    <span class="stat-label">Donations</span>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- CTA Section -->
-<section class="cta-section">
-    <div class="cta-card">
-        <h2 class="cta-title">Join the Fight Against Food Waste</h2>
-        <p class="cta-text">
-            Every year, millions of tons of food are wasted while people go hungry. 
-            Be part of the solution. Join MUKTI today and help create a world where no food is wasted and no one goes hungry.
-        </p>
-        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-            <a th:href="@{/register}" class="btn btn-primary" style="background: white; color: var(--primary-dark);">
-                <i class="fas fa-hands-helping"></i>
-                Donate Surplus Food
-            </a>
-            <a th:href="@{/register}" class="btn btn-secondary" style="border-color: white; color: white;">
-                <i class="fas fa-utensils"></i>
-                Get Food Support
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-content">
-        <div class="footer-column">
-            <div class="footer-logo">
-                <i class="fas fa-hands-helping"></i>
-                MUKTI APP
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Our Mission Against Food Waste</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <h3 class="feature-title">Zero Waste Goal</h3>
+                <p class="feature-desc">Transform surplus food into meals for those in need. Every donation prevents
+                    waste and feeds a family.</p>
             </div>
-            <p class="footer-desc">
-                Eliminating food waste and fighting hunger by connecting surplus food with those in need.
-                Together, we can create a sustainable, hunger-free community.
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="feature-title">Community Care</h3>
+                <p class="feature-desc">Build stronger communities by ensuring no one goes hungry while perfectly good
+                    food goes to waste.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h3 class="feature-title">Environmental Impact</h3>
+                <p class="feature-desc">Reduce landfill waste and carbon footprint. Every meal saved helps our planet
+                    and our people.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">Create Account</h3>
+                    <p class="step-desc">Sign up as a donor or receiver with your basic information. Verification takes
+                        just minutes.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">Connect & Share</h3>
+                    <p class="step-desc">Donors post available food. Receivers browse nearby donations and make requests
+                        instantly.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">Make Impact</h3>
+                    <p class="step-desc">Connect with each other, arrange pickup, and share meals with those in need.
+                        Track your impact in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <h2 class="section-title">What Our Users Say</h2>
+        <div class="testimonial-slider">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "MUKTI APP has transformed how I handle excess food from my restaurant. Instead of wasting, I'm now
+                    feeding families in need. It's incredibly rewarding!"
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">R</div>
+                    <div class="author-info">
+                        <h4>Rahim Ahmed</h4>
+                        <p>Restaurant Owner & Donor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2 class="cta-title">Join the Fight Against Food Waste</h2>
+            <p class="cta-text">
+                Every year, millions of tons of food are wasted while people go hungry.
+                Be part of the solution. Join MUKTI today and help create a world where no food is wasted and no one
+                goes hungry.
             </p>
-            <div class="social-links">
-                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a th:href="@{/register}" class="btn btn-primary"
+                    style="background: white; color: var(--primary-dark);">
+                    <i class="fas fa-hands-helping"></i>
+                    Donate Surplus Food
+                </a>
+                <a th:href="@{/register}" class="btn btn-secondary" style="border-color: white; color: white;">
+                    <i class="fas fa-utensils"></i>
+                    Get Food Support
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <i class="fas fa-hands-helping"></i>
+                    MUKTI APP
+                </div>
+                <p class="footer-desc">
+                    Eliminating food waste and fighting hunger by connecting surplus food with those in need.
+                    Together, we can create a sustainable, hunger-free community.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a th:href="@{/}"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a th:href="@{/login}"><i class="fas fa-chevron-right"></i> Login</a></li>
+                    <li><a th:href="@{/register}"><i class="fas fa-chevron-right"></i> Register</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="SHAMSIL AREFIN"><i class="fas fa-name"></i> SHAMSIL AREFIN</a></li>
+                    <li><a href="tel:+8801799008544"><i class="fas fa-phone"></i> +880 1799008544</a></li>
+                    <li><a href="mailto:support@mukti.app"><i class="fas fa-envelope"></i> support@mukti.app</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</a></li>
+                </ul>
             </div>
         </div>
 
-        <div class="footer-links">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a th:href="@{/}"><i class="fas fa-chevron-right"></i> Home</a></li>
-                <li><a th:href="@{/login}"><i class="fas fa-chevron-right"></i> Login</a></li>
-                <li><a th:href="@{/register}"><i class="fas fa-chevron-right"></i> Register</a></li>
-            </ul>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MUKTI APP. All rights reserved. | Made with <i class="fas fa-heart"
+                    style="color: #EF4444;"></i> for a better world</p>
         </div>
+    </footer>
 
-        <div class="footer-links">
-            <h3>Contact Us</h3>
-            <ul>
-                <li><a href="SHAMSIL AREFIN"><i class="fas fa-name"></i> SHAMSIL AREFIN</a></li>
-                <li><a href="tel:+8801799008544"><i class="fas fa-phone"></i> +880 1799008544</a></li>
-                <li><a href="mailto:support@mukti.app"><i class="fas fa-envelope"></i> support@mukti.app</a></li>
-                <li><a href="#"><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>&copy; 2026 MUKTI APP. All rights reserved. | Made with <i class="fas fa-heart" style="color: #EF4444;"></i> for a better world</p>
-    </div>
-</footer>
-
-<script>
-    // Navbar scroll effect
-    function handleNavbarScroll() {
-        const navbar = document.getElementById('navbar');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    <script>
+        // Navbar scroll effect
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         }
-    }
 
-    // Smooth scroll for anchor links
-    function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
+        // Smooth scroll for anchor links
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
 
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
             });
-        });
-    }
+        }
 
-    // Animate stats counter
-    function animateStats() {
-        const statCards = document.querySelectorAll('.stat-card');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumber = entry.target.querySelector('.stat-number');
-                    const finalValue = parseInt(statNumber.textContent);
-                    let startValue = 0;
-                    const duration = 2000;
-                    const increment = finalValue / (duration / 16);
+        // Animate stats counter
+        function animateStats() {
+            const statCards = document.querySelectorAll('.stat-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumber = entry.target.querySelector('.stat-number');
+                        const finalValue = parseInt(statNumber.textContent);
+                        let startValue = 0;
+                        const duration = 2000;
+                        const increment = finalValue / (duration / 16);
 
-                    const timer = setInterval(() => {
-                        startValue += increment;
-                        if (startValue >= finalValue) {
-                            statNumber.textContent = finalValue.toLocaleString() + '+';
-                            clearInterval(timer);
-                        } else {
-                            statNumber.textContent = Math.floor(startValue).toLocaleString();
-                        }
-                    }, 16);
+                        const timer = setInterval(() => {
+                            startValue += increment;
+                            if (startValue >= finalValue) {
+                                statNumber.textContent = finalValue.toLocaleString() + '+';
+                                clearInterval(timer);
+                            } else {
+                                statNumber.textContent = Math.floor(startValue).toLocaleString();
+                            }
+                        }, 16);
 
-                    observer.unobserve(entry.target);
-                }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            statCards.forEach(card => observer.observe(card));
+        }
+
+        // Add hover effects to cards
+        function addCardHoverEffects() {
+            const cards = document.querySelectorAll('.feature-card, .step-content, .testimonial-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = card.classList.contains('feature-card')
+                        ? 'translateY(-15px)'
+                        : 'translateY(-10px)';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
             });
-        }, { threshold: 0.5 });
+        }
 
-        statCards.forEach(card => observer.observe(card));
-    }
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize smooth scroll
+            initSmoothScroll();
 
-    // Add hover effects to cards
-    function addCardHoverEffects() {
-        const cards = document.querySelectorAll('.feature-card, .step-content, .testimonial-card');
+            // Setup navbar scroll effect
+            window.addEventListener('scroll', handleNavbarScroll);
+            handleNavbarScroll(); // Initial check
 
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = card.classList.contains('feature-card')
-                    ? 'translateY(-15px)'
-                    : 'translateY(-10px)';
-            });
+            // Animate stats
+            setTimeout(animateStats, 500);
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0)';
-            });
-        });
-    }
+            // Add card hover effects
+            addCardHoverEffects();
 
-    // Initialize everything
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize smooth scroll
-        initSmoothScroll();
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.btn, .cta-btn, .social-icon');
+            buttons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
 
-        // Setup navbar scroll effect
-        window.addEventListener('scroll', handleNavbarScroll);
-        handleNavbarScroll(); // Initial check
-
-        // Animate stats
-        setTimeout(animateStats, 500);
-
-        // Add card hover effects
-        addCardHoverEffects();
-
-        // Add ripple effect to buttons
-        const buttons = document.querySelectorAll('.btn, .cta-btn, .social-icon');
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const ripple = document.createElement('span');
-                ripple.style.cssText = `
+                    const ripple = document.createElement('span');
+                    ripple.style.cssText = `
                     position: absolute;
                     border-radius: 50%;
                     background: rgba(255, 255, 255, 0.3);
@@ -1094,23 +1118,23 @@
                     animation: ripple 0.6s linear;
                 `;
 
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
 
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                ripple.style.width = '0';
-                ripple.style.height = '0';
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    ripple.style.width = '0';
+                    ripple.style.height = '0';
 
-                this.appendChild(ripple);
+                    this.appendChild(ripple);
 
-                setTimeout(() => ripple.remove(), 600);
+                    setTimeout(() => ripple.remove(), 600);
+                });
             });
-        });
 
-        // Add ripple animation CSS
-        const style = document.createElement('style');
-        style.textContent = `
+            // Add ripple animation CSS
+            const style = document.createElement('style');
+            style.textContent = `
             @keyframes ripple {
                 to {
                     width: 300px;
@@ -1119,10 +1143,11 @@
                 }
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
 
-    });
-</script>
+        });
+    </script>
 </body>
+
 </html>

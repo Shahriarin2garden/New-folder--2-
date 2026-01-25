@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password | MUKTI APP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary: #10B981;
@@ -13,489 +16,172 @@
             --primary-dark: #059669;
             --secondary: #F59E0B;
             --accent: #F97316;
-            --dark: #1F2937;
-            --light: #F9FAFB;
-            --gray: #6B7280;
-            --light-gray: #E5E7EB;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-pill: 50px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', 'Inter', sans-serif;
         }
 
         body {
-            background:
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--text-main);
             padding: 20px;
-            color: white;
         }
 
-        .container {
+        .card {
             width: 100%;
-            max-width: 500px;
+            max-width: 440px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.8s ease;
         }
 
-        .forgot-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .forgot-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient-warm);
-        }
-
-        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-decoration: none;
-        }
-
-        .logo i {
-            color: var(--secondary);
-            font-size: 1.8rem;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+            margin-bottom: 40px;
         }
 
         .header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            line-height: 1.5;
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        /* Steps Indicator */
-        .steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            position: relative;
+        .form-group {
+            margin-bottom: 24px;
         }
 
-        .steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 50px;
-            right: 50px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            z-index: 1;
-        }
-
-        .progress-bar {
-            position: absolute;
-            top: 20px;
-            left: 50px;
-            height: 3px;
-            background: var(--gradient);
-            z-index: 2;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .step {
-            text-align: center;
-            position: relative;
-            z-index: 3;
-            flex: 1;
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .step.active .step-circle {
-            background: var(--gradient);
-            border-color: var(--primary);
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .step.completed .step-circle {
-            background: var(--gradient-warm);
-            border-color: var(--secondary);
-            color: white;
-        }
-
-        .step.completed .step-circle i {
-            font-size: 0.9rem;
-        }
-
-        .step-label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .step.active .step-label {
-            color: white;
-            font-weight: 600;
-        }
-
-        .step.completed .step-label {
-            color: var(--secondary);
-        }
-
-        /* Thymeleaf Messages */
-        .alert {
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-left: 4px solid;
-            backdrop-filter: blur(10px);
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #A7F3D0;
-            border-left-color: #10B981;
-        }
-
-        .alert-error {
-            background: rgba(220, 38, 38, 0.2);
-            color: #FECACA;
-            border-left-color: #DC2626;
-        }
-
-        .alert-info {
-            background: rgba(59, 130, 246, 0.2);
-            color: #BFDBFE;
-            border-left-color: #3B82F6;
-        }
-
-        .alert i {
-            font-size: 1.2rem;
-        }
-
-        /* Forms */
-        .form-section {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            color: white;
-            font-size: 1rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-label i {
-            color: var(--secondary);
-            font-size: 1.1rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .required {
-            color: #F87171;
-            margin-left: 3px;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-        }
-
-        .form-control {
+        .input-field {
             width: 100%;
-            padding: 16px 16px 16px 48px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
             color: white;
-            backdrop-filter: blur(5px);
-        }
-
-        .form-control:focus {
+            font-size: 1rem;
             outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .form-control:focus + i {
-            color: var(--primary);
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-light);
         }
 
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Buttons */
         .btn {
             width: 100%;
-            padding: 16px;
-            background: var(--gradient);
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: var(--radius-pill);
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+            margin-top: 12px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3);
         }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-success {
-            background: var(--gradient-warm);
-        }
-
-        .btn-success:hover {
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
-        }
-
-        /* OTP Inputs */
-        .otp-container {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-
-        .otp-input {
-            width: 55px;
-            height: 65px;
+        .footer {
             text-align: center;
-            font-size: 1.8rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .otp-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        /* Timer */
-        .timer {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.9);
+            margin-top: 32px;
+            color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 20px;
         }
 
-        .timer span {
-            color: var(--secondary);
+        .footer a {
+            color: var(--primary-light);
+            text-decoration: none;
             font-weight: 600;
         }
 
-        .resend-link {
-            color: var(--secondary);
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .resend-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Links */
-        .links {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
+        .alert {
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
             font-size: 0.9rem;
-            display: block;
-            margin: 10px 0;
-            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .links a:hover {
-            color: var(--secondary);
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        /* Password Strength */
-        .password-strength {
-            margin-top: 10px;
-        }
-
-        .strength-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--gradient);
-            transition: width 0.3s ease, background 0.3s ease;
-        }
-
-        .strength-text {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .forgot-card {
-                padding: 30px 25px;
-            }
-
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .logo {
-                font-size: 1.4rem;
-            }
-
-            .steps::before {
-                left: 30px;
-                right: 30px;
-            }
-
-            .otp-input {
-                width: 45px;
-                height: 55px;
-                font-size: 1.5rem;
-            }
-
-            .otp-container {
-                gap: 8px;
-            }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-light);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
     </style>
 </head>
-<body>
-<div class="container">
-    <div class="forgot-card">
-        <!-- Header -->
-        <div class="header">
-            <a th:href="@{/}" class="logo">
-                <i class="fas fa-utensils"></i>
-                MUKTI APP
-            </a>
-            <h1>Reset Password</h1>
-            <p>Secure your account with a new password in three simple steps</p>
-        </div>
 
-        <!-- Thymeleaf Messages -->
+<body>
+    <div class="card">
+        <header class="header">
+            <h1>Reset Password</h1>
+            <p>We'll help you get back in.</p>
+        </header>
+
         <div th:if="${error}" class="alert alert-error">
             <i class="fas fa-exclamation-circle"></i>
             <span th:text="${error}">Error message</span>
@@ -506,384 +192,19 @@
             <span th:text="${success}">Success message</span>
         </div>
 
-        <!-- Steps Indicator -->
-        <div class="steps">
-            <div class="progress-bar" id="progressBar"></div>
-            <div class="step active" data-step="1">
-                <div class="step-circle">1</div>
-                <div class="step-label">Verify Email</div>
+        <form th:action="@{/forgot}" method="post">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="input-field" placeholder="your@email.com" required>
             </div>
-            <div class="step" data-step="2">
-                <div class="step-circle">2</div>
-                <div class="step-label">Enter OTP</div>
-            </div>
-            <div class="step" data-step="3">
-                <div class="step-circle">3</div>
-                <div class="step-label">New Password</div>
-            </div>
-        </div>
 
-        <!-- Step 1: Verify Email -->
-        <div class="form-section active" id="step1">
-            <form th:action="@{/forgot-password/send-otp}" method="post" id="emailForm">
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-envelope"></i> Email Address <span class="required">*</span>
-                    </label>
-                    <div class="input-group">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" name="email" class="form-control"
-                               placeholder="Enter your registered email" required
-                               th:value="${email}">
-                    </div>
-                </div>
+            <button type="submit" class="btn">Send Link</button>
+        </form>
 
-                <button type="submit" class="btn" id="sendOtpBtn">
-                    <i class="fas fa-paper-plane"></i> Send Verification Code
-                </button>
-            </form>
-        </div>
-
-        <!-- Step 2: Verify OTP -->
-        <div class="form-section" id="step2">
-            <form th:action="@{/forgot-password/verify-otp}" method="post" id="otpForm">
-                <input type="hidden" name="email" id="verifyEmail">
-
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-shield-alt"></i> Enter Verification Code <span class="required">*</span>
-                    </label>
-
-                    <div class="otp-container" id="otpContainer">
-                        <input type="text" maxlength="1" name="otp1" class="otp-input" data-index="1" required>
-                        <input type="text" maxlength="1" name="otp2" class="otp-input" data-index="2" required>
-                        <input type="text" maxlength="1" name="otp3" class="otp-input" data-index="3" required>
-                        <input type="text" maxlength="1" name="otp4" class="otp-input" data-index="4" required>
-                        <input type="text" maxlength="1" name="otp5" class="otp-input" data-index="5" required>
-                        <input type="text" maxlength="1" name="otp6" class="otp-input" data-index="6" required>
-                    </div>
-
-                    <div class="timer" id="timer">
-                        Code expires in: <span id="timeLeft">05:00</span>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn" id="verifyOtpBtn">
-                    <i class="fas fa-check-circle"></i> Verify Code
-                </button>
-            </form>
-        </div>
-
-        <!-- Step 3: Reset Password -->
-        <div class="form-section" id="step3">
-            <form th:action="@{/forgot-password/reset}" method="post" id="passwordForm">
-                <input type="hidden" name="email" id="resetEmail">
-                <input type="hidden" name="otp" id="resetOtp">
-
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-lock"></i> New Password <span class="required">*</span>
-                    </label>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" name="password" class="form-control"
-                               placeholder="Enter new password" required
-                               id="newPassword" minlength="8">
-                    </div>
-                    <div class="password-strength">
-                        <div class="strength-bar">
-                            <div class="strength-fill" id="strengthFill"></div>
-                        </div>
-                        <div class="strength-text" id="strengthText">Password strength: Weak</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-lock"></i> Confirm Password <span class="required">*</span>
-                    </label>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" name="confirmPassword" class="form-control"
-                               placeholder="Confirm new password" required
-                               id="confirmPassword">
-                    </div>
-                    <div class="strength-text" id="passwordMatch"></div>
-                </div>
-
-                <button type="submit" class="btn btn-success" id="resetBtn">
-                    <i class="fas fa-key"></i> Reset Password
-                </button>
-            </form>
-        </div>
-
-        <!-- Links -->
-        <div class="links">
-            <a th:href="@{/login}"><i class="fas fa-arrow-left"></i> Back to Login</a>
-            <a th:href="@{/}"><i class="fas fa-home"></i> Back to Home</a>
+        <div class="footer">
+            <p>Remembered? <a th:href="@{/login}">Back to Login</a></p>
         </div>
     </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Elements
-        const stepSections = document.querySelectorAll('.form-section');
-        const steps = document.querySelectorAll('.step');
-        const progressBar = document.getElementById('progressBar');
-        const emailForm = document.getElementById('emailForm');
-        const otpForm = document.getElementById('otpForm');
-        const passwordForm = document.getElementById('passwordForm');
-        const otpInputs = document.querySelectorAll('.otp-input');
-        const timerElement = document.getElementById('timeLeft');
-        const strengthFill = document.getElementById('strengthFill');
-        const strengthText = document.getElementById('strengthText');
-        const passwordMatch = document.getElementById('passwordMatch');
-
-        // Variables
-        let currentStep = 1;
-        let timerInterval;
-        let timeLeft = 300; // 5 minutes in seconds
-        let verificationToken = '';
-
-        // Update progress bar and steps
-        function updateProgress() {
-            const progressPercentage = ((currentStep - 1) / 2) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-
-            steps.forEach((step, index) => {
-                const stepNumber = index + 1;
-                step.classList.remove('active', 'completed');
-
-                if (stepNumber < currentStep) {
-                    step.classList.add('completed');
-                    step.querySelector('.step-circle').innerHTML = '<i class="fas fa-check"></i>';
-                } else if (stepNumber === currentStep) {
-                    step.classList.add('active');
-                    step.querySelector('.step-circle').textContent = stepNumber;
-                } else {
-                    step.querySelector('.step-circle').textContent = stepNumber;
-                }
-            });
-
-            // Show/hide sections
-            stepSections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === `step${currentStep}`) {
-                    section.classList.add('active');
-                }
-            });
-        }
-
-        // Start timer for OTP
-        function startTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 300;
-            updateTimerDisplay();
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    timerElement.innerHTML = '<span class="resend-link" onclick="resendOTP()">Resend Code</span>';
-                }
-            }, 1000);
-        }
-
-        // Update timer display
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        // Check password strength
-        function checkPasswordStrength(password) {
-            let strength = 0;
-
-            // Length check
-            if (password.length >= 8) strength += 1;
-            if (password.length >= 12) strength += 1;
-
-            // Character type checks
-            if (/[a-z]/.test(password)) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-
-            const strengthMap = [
-                { width: '20%', color: '#EF4444', text: 'Very Weak' },
-                { width: '40%', color: '#F97316', text: 'Weak' },
-                { width: '60%', color: '#F59E0B', text: 'Fair' },
-                { width: '80%', color: '#10B981', text: 'Good' },
-                { width: '100%', color: '#059669', text: 'Strong' }
-            ];
-
-            const level = Math.min(strength, 5) - 1;
-            const currentStrength = strengthMap[level] || strengthMap[0];
-
-            strengthFill.style.width = currentStrength.width;
-            strengthFill.style.background = currentStrength.color;
-            strengthText.textContent = `Password strength: ${currentStrength.text}`;
-            strengthText.style.color = currentStrength.color;
-        }
-
-        // Check password match
-        function checkPasswordMatch() {
-            const password = document.getElementById('newPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-
-            if (!confirm) {
-                passwordMatch.textContent = '';
-                return;
-            }
-
-            if (password === confirm) {
-                passwordMatch.textContent = '✓ Passwords match';
-                passwordMatch.style.color = '#10B981';
-            } else {
-                passwordMatch.textContent = '✗ Passwords do not match';
-                passwordMatch.style.color = '#EF4444';
-            }
-        }
-
-        // OTP Input handling
-        otpInputs.forEach((input, index) => {
-            input.addEventListener('input', function(e) {
-                const value = this.value;
-
-                // Auto-focus next input
-                if (value && index < otpInputs.length - 1) {
-                    otpInputs[index + 1].focus();
-                }
-
-                // Auto-verify if last digit entered
-                if (index === otpInputs.length - 1 && value) {
-                    const otp = Array.from(otpInputs).map(i => i.value).join('');
-                    if (otp.length === 6) {
-                        setTimeout(() => {
-                            document.getElementById('verifyOtpBtn').click();
-                        }, 500);
-                    }
-                }
-            });
-
-            // Handle backspace
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && !this.value && index > 0) {
-                    otpInputs[index - 1].focus();
-                }
-            });
-
-            // Allow only numbers
-            input.addEventListener('keypress', function(e) {
-                if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                }
-            });
-        });
-
-        // Form submissions with client-side validation
-        emailForm.addEventListener('submit', function(e) {
-            const email = this.email.value.trim();
-            if (!email) {
-                e.preventDefault();
-                alert('Please enter your email address');
-                return;
-            }
-
-            // Store email for next steps
-            localStorage.setItem('resetEmail', email);
-        });
-
-        otpForm.addEventListener('submit', function(e) {
-            const otp = Array.from(otpInputs).map(i => i.value).join('');
-            if (otp.length !== 6) {
-                e.preventDefault();
-                alert('Please enter the complete 6-digit code');
-                return;
-            }
-
-            // Get email from localStorage
-            const email = localStorage.getItem('resetEmail');
-            if (email) {
-                document.getElementById('verifyEmail').value = email;
-            }
-        });
-
-        passwordForm.addEventListener('submit', function(e) {
-            const password = this.password.value;
-            const confirmPassword = this.confirmPassword.value;
-
-            if (password.length < 8) {
-                e.preventDefault();
-                alert('Password must be at least 8 characters long');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match');
-                return;
-            }
-
-            // Get email from localStorage
-            const email = localStorage.getItem('resetEmail');
-            if (email) {
-                document.getElementById('resetEmail').value = email;
-            }
-        });
-
-        // Password strength and match real-time checking
-        document.getElementById('newPassword').addEventListener('input', function() {
-            checkPasswordStrength(this.value);
-            checkPasswordMatch();
-        });
-
-        document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
-
-        // Handle success message to move to next step
-        window.addEventListener('load', function() {
-            const successMessage = document.querySelector('.alert-success');
-            if (successMessage) {
-                const message = successMessage.textContent.toLowerCase();
-
-                if (message.includes('otp sent') || message.includes('code sent')) {
-                    currentStep = 2;
-                    updateProgress();
-                    startTimer();
-
-                    // Focus first OTP input
-                    setTimeout(() => {
-                        otpInputs[0].focus();
-                    }, 100);
-                } else if (message.includes('verified') || message.includes('otp verified')) {
-                    currentStep = 3;
-                    updateProgress();
-
-                    // Focus password input
-                    setTimeout(() => {
-                        document.getElementById('newPassword').focus();
-                    }, 100);
-                }
-            }
-        });
-
-        // Global function for resend OTP
-        window.resendOTP = function() {
-            const email = localStorage.getItem('resetEmail');
-            if (email) {
-                // Submit form to resend OTP
-                emailForm.email.value = email;
-                emailForm.submit();
-            }
-        };
-
-        // Initialize progress
-        updateProgress();
-    });
-</script>
 </body>
+
 </html>
