@@ -62,13 +62,17 @@ public class ChatController {
 
             // Determine Other Party Details
             String otherPhone = msg.getSenderPhone().trim().equals(userPhone)
-                    ? msg.getReceiverPhone()
-                    : msg.getSenderPhone();
+                    ? msg.getReceiverPhone().trim()
+                    : msg.getSenderPhone().trim();
 
             // Fetch the most up-to-date name from User repo
             String otherName = userRepository.findByPhone(otherPhone)
                     .map(User::getName)
+                    .filter(name -> name != null && !name.trim().isEmpty())
                     .orElse(msg.getSenderPhone().trim().equals(userPhone) ? "User" : msg.getSenderName());
+
+            if (otherName == null || otherName.trim().isEmpty())
+                otherName = "User";
 
             // Count unread messages (sent TO current user)
             long unreadCount = chatMessageRepository.findConversation(post.getId(), userPhone, otherPhone)
@@ -139,7 +143,10 @@ public class ChatController {
                     chatMessageRepository.save(m);
                 });
 
-        String otherName = userRepository.findByPhone(targetPhone).map(User::getName).orElse("Unknown User");
+        String otherName = userRepository.findByPhone(targetPhone)
+                .map(User::getName)
+                .filter(name -> name != null && !name.trim().isEmpty())
+                .orElse("Unknown User");
 
         model.addAttribute("foodPost", post);
         model.addAttribute("messages", messages);

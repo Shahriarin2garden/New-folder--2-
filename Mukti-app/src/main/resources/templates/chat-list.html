@@ -274,9 +274,11 @@
                 </div>
 
                 <a th:each="conv : ${donations}"
-                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherUserPhone=' + ${conv.otherUserPhone}}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone}}"
                     class="conv-item">
-                    <div class="avatar" th:text="${conv.otherUserName.substring(0, 1).toUpperCase()}">U</div>
+                    <div class="avatar"
+                        th:text="${conv.otherUserName != null && !conv.otherUserName.isEmpty() ? conv.otherUserName.substring(0, 1).toUpperCase() : 'U'}">
+                        U</div>
                     <div class="details">
                         <div class="top-row">
                             <span class="name" th:text="${conv.otherUserName}">User</span>
@@ -302,9 +304,11 @@
                 </div>
 
                 <a th:each="conv : ${receivals}"
-                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherUserPhone=' + ${conv.otherUserPhone}}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone}}"
                     class="conv-item">
-                    <div class="avatar receiver" th:text="${conv.otherUserName.substring(0, 1).toUpperCase()}">U</div>
+                    <div class="avatar receiver"
+                        th:text="${conv.otherUserName != null && !conv.otherUserName.isEmpty() ? conv.otherUserName.substring(0, 1).toUpperCase() : 'U'}">
+                        U</div>
                     <div class="details">
                         <div class="top-row">
                             <span class="name" th:text="${conv.otherUserName}">User</span>

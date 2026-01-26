@@ -259,7 +259,9 @@
         <header class="chat-header">
             <div class="header-left">
                 <a href="/chat" class="back-link"><i class="fas fa-chevron-left"></i></a>
-                <div class="avatar" th:text="${otherUserName.substring(0, 1).toUpperCase()}">U</div>
+                <div class="avatar"
+                    th:text="${otherUserName != null && !otherUserName.isEmpty() ? otherUserName.substring(0, 1).toUpperCase() : 'U'}">
+                    U</div>
                 <div class="user-details">
                     <h2 th:text="${otherUserName}">User</h2>
                     <div class="food-tag">

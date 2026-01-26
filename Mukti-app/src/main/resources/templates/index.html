@@ -7,7 +7,7 @@
     <title>MUKTI APP | Fight Hunger, Reduce Waste - সবার জন্য খাবার</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Baloo+Da+2:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link th:href="@{/css/global.css}" rel="stylesheet">
     <style>
@@ -121,7 +121,7 @@
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             position: relative;
         }
@@ -152,7 +152,7 @@
             box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
         }
 
-        /* Hero Section */
+        /* Hero Section - Updated for better visibility of background */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -160,11 +160,16 @@
             justify-content: center;
             padding: 120px 5% 80px;
             position: relative;
+            align-items: flex-start;
+            /* Align to left to show faces */
         }
 
         .hero-content {
-            max-width: 900px;
+            max-width: 650px;
+            /* Constrain width to left side */
             animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 2;
         }
 
         @keyframes fadeIn {
@@ -196,16 +201,20 @@
         }
 
         .theme-text {
-            font-family: 'Hind Siliguri', 'Outfit', sans-serif;
-            font-size: 5.5rem;
-            font-weight: 800;
-            line-height: 1.1;
+            font-family: 'Noto Serif Bengali', 'Hind Siliguri', serif;
+            font-size: 7rem;
+            font-weight: 700;
+            line-height: 1.5;
+            padding-bottom: 10px;
+            /* Prevent bottom clipping */
+            padding-top: 10px;
+            /* Prevent top clipping */
             margin-bottom: 24px;
             background: linear-gradient(135deg, #ffffff 30%, var(--primary-light) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
+            /* letter-spacing: -2px; Removed for Bangla legibility */
         }
 
         .tagline {
@@ -673,7 +682,9 @@
 <body>
     <div class="bg-wrapper"></div>
     <div class="bg-glow" style="top: 0; right: 0;"></div>
-    <div class="bg-glow" style="bottom: 0; left: 0; background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 70%);"></div>
+    <div class="bg-glow"
+        style="bottom: 0; left: 0; background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 70%);">
+    </div>
 
     <!-- Navigation Bar -->
     <nav class="navbar" id="navbar">
@@ -695,9 +706,7 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <div class="mission-badge">
-                <i class="fas fa-heart"></i> Empowering Communities
-            </div>
+
             <h1 class="theme-text">মুক্তি</h1>
             <p class="tagline">
                 Connecting surplus food with those in need. <span class="highlight">Together, we eliminate waste and
@@ -743,7 +752,8 @@
                     <i class="fas fa-recycle"></i>
                 </div>
                 <h3 class="feature-title">Sustainability</h3>
-                <p class="feature-desc">Every donation prevents landfill waste and reduces the carbon footprint, making our planet greener with every meal.</p>
+                <p class="feature-desc">Every donation prevents landfill waste and reduces the carbon footprint, making
+                    our planet greener with every meal.</p>
             </div>
 
             <div class="feature-card">
@@ -751,7 +761,8 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <h3 class="feature-title">Community First</h3>
-                <p class="feature-desc">We build a bridge between local hero donors and those in need, fostering a spirit of mutual support and care.</p>
+                <p class="feature-desc">We build a bridge between local hero donors and those in need, fostering a
+                    spirit of mutual support and care.</p>
             </div>
 
             <div class="feature-card">
@@ -759,7 +770,8 @@
                     <i class="fas fa-bolt"></i>
                 </div>
                 <h3 class="feature-title">Real-time Relief</h3>
-                <p class="feature-desc">Our intelligent platform ensures food reaches those in need while it's still fresh, using localized notifications.</p>
+                <p class="feature-desc">Our intelligent platform ensures food reaches those in need while it's still
+                    fresh, using localized notifications.</p>
             </div>
         </div>
     </section>
@@ -775,19 +787,22 @@
             <div class="step-card">
                 <div class="step-number">1</div>
                 <h3 class="feature-title">Create Profile</h3>
-                <p class="feature-desc">Sign up as a donor or receiver. It's fast, secure, and completely free to join our mission.</p>
+                <p class="feature-desc">Sign up as a donor or receiver. It's fast, secure, and completely free to join
+                    our mission.</p>
             </div>
 
             <div class="step-card">
                 <div class="step-number">2</div>
                 <h3 class="feature-title">List or Browse</h3>
-                <p class="feature-desc">Donors snap a photo of surplus food; receivers see what's available nearby in real-time.</p>
+                <p class="feature-desc">Donors snap a photo of surplus food; receivers see what's available nearby in
+                    real-time.</p>
             </div>
 
             <div class="step-card">
                 <div class="step-number">3</div>
                 <h3 class="feature-title">Coordinate</h3>
-                <p class="feature-desc">Connect via secure chat, arrange a safe pickup, and experience the joy of sharing.</p>
+                <p class="feature-desc">Connect via secure chat, arrange a safe pickup, and experience the joy of
+                    sharing.</p>
             </div>
         </div>
     </section>
@@ -797,7 +812,8 @@
         <div class="testimonial-card">
             <i class="fas fa-quote-left quote-icon"></i>
             <p class="testimonial-text">
-                "MUKTI APP transformed my restaurant's waste policy. Now, my surplus food feeds local families instead of filling bins. The gratitude is priceless."
+                "MUKTI APP transformed my restaurant's waste policy. Now, my surplus food feeds local families instead
+                of filling bins. The gratitude is priceless."
             </p>
             <div class="author-info">
                 <div class="author-avatar">R</div>
@@ -813,7 +829,8 @@
     <section class="cta-section">
         <div class="cta-box">
             <h2 class="cta-title">Ready to Make a Difference?</h2>
-            <p class="cta-desc">Join thousands of others who are already fighting hunger in their neighborhoods. Your first donation is just minutes away.</p>
+            <p class="cta-desc">Join thousands of others who are already fighting hunger in their neighborhoods. Your
+                first donation is just minutes away.</p>
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                 <a th:href="@{/register}" class="btn btn-primary">Start Donating Now</a>
                 <a th:href="@{/register}" class="btn btn-secondary">Request Food Support</a>
@@ -829,7 +846,8 @@
                     <i class="fas fa-hands-helping" style="color: var(--primary-light);"></i>
                     MUKTI APP
                 </div>
-                <p class="footer-desc">Redefining food security through technology and community action. Based in Dhaka, serving humanity.</p>
+                <p class="footer-desc">Redefining food security through technology and community action. Based in Dhaka,
+                    serving humanity.</p>
                 <div class="social-links">
                     <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
@@ -858,7 +876,8 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2026 MUKTI APP. Crafted with <i class="fas fa-heart" style="color: #ef4444;"></i> for a zero-hunger world.</p>
+            <p>&copy; 2026 MUKTI APP. Crafted with <i class="fas fa-heart" style="color: #ef4444;"></i> for a
+                zero-hunger world.</p>
         </div>
     </footer>
 
