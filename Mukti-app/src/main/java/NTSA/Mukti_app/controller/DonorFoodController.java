@@ -27,12 +27,20 @@ public class DonorFoodController {
     private NTSA.Mukti_app.repository.UserRepository userRepo;
 
     @Autowired
+    private NTSA.Mukti_app.repository.FoodRepository foodRepo;
+
+    @Autowired
     private NTSA.Mukti_app.service.NotificationService notificationService;
 
     @GetMapping("/donate")
-    public String donatePage(HttpSession session) {
-        if (session.getAttribute("user") == null)
+    public String donatePage(HttpSession session, Model model) {
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null)
             return "redirect:/login";
+
+        // Fetch latest version of user to get current address
+        User user = userRepo.findByPhone(sessionUser.getPhone()).orElse(sessionUser);
+        model.addAttribute("user", user);
         return "donate";
     }
 
@@ -66,6 +74,25 @@ public class DonorFoodController {
 
         if (all != null) {
             for (History h : all) {
+                // Retroactive fix for missing foodPostId
+                if (h.getFoodPostId() == null) {
+                    List<FoodPost> matchingPosts = foodRepo.findAll().stream()
+                            .filter(fp -> fp.getFoodName().equalsIgnoreCase(h.getFoodName()))
+                            .filter(fp -> {
+                                if ("DONOR".equals(h.getRole())) {
+                                    return fp.getDonorPhone().trim().equals(h.getUserPhone().trim());
+                                } else {
+                                    return fp.getReceiverPhone() != null
+                                            && fp.getReceiverPhone().trim().equals(h.getUserPhone().trim());
+                                }
+                            })
+                            .toList();
+                    if (!matchingPosts.isEmpty()) {
+                        h.setFoodPostId(matchingPosts.get(0).getId());
+                        historyRepo.save(h);
+                    }
+                }
+
                 if ("DONOR".equals(h.getRole()))
                     donations.add(h);
                 else

@@ -51,7 +51,7 @@ public class ReciveFoodController {
                 service.received(id, receiver.getPhone());
 
                 historyRepo.save(new History(receiver.getPhone(), food.getFoodName(), food.getLocation(),
-                        "RECEIVER", "Processing", food.getDonorName(), food.getDonorPhone()));
+                        "RECEIVER", "Processing", food.getDonorName(), food.getDonorPhone(), id));
 
                 List<History> donorHistories = historyRepo.findByUserPhoneOrderByActivityTimeDesc(food.getDonorPhone());
                 for (History h : donorHistories) {

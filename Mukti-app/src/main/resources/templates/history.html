@@ -336,8 +336,13 @@
                     <button th:onclick="'updateStatus(' + ${item.id} + ', \'cancel\')'" class="btn btn-danger">
                         <i class="fas fa-times"></i> Cancel Donated
                     </button>
-                    <a th:href="@{/chat/list}" class="btn btn-outline">
+                    <a th:if="${item.foodPostId != null && item.otherPartyPhone != null}"
+                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone}}"
+                        class="btn btn-outline">
                         <i class="fas fa-comments"></i> Chat with Receiver
+                    </a>
+                    <a th:if="${item.foodPostId == null}" th:href="@{/chat/list}" class="btn btn-outline">
+                        <i class="fas fa-comments"></i> Open Messages
                     </a>
                 </div>
             </div>
@@ -380,8 +385,14 @@
                 </div>
 
                 <div class="card-actions">
-                    <a th:href="@{/chat/list}" class="btn btn-primary" th:if="${item.status == 'Processing'}">
+                    <a th:if="${item.status == 'Processing' && item.foodPostId != null && item.otherPartyPhone != null}"
+                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone}}"
+                        class="btn btn-primary">
                         <i class="fas fa-comments"></i> Chat with Donor
+                    </a>
+                    <a th:if="${item.status == 'Processing' && item.foodPostId == null}" th:href="@{/chat/list}"
+                        class="btn btn-primary">
+                        <i class="fas fa-comments"></i> Open Messages
                     </a>
                     <button th:if="${item.status == 'Processing'}"
                         th:onclick="'updateStatus(' + ${item.id} + ', \'cancel\')'" class="btn btn-outline">

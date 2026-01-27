@@ -15,6 +15,9 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
+    private NTSA.Mukti_app.repository.UserRepository userRepo;
+
+    @Autowired
     private AuthService authService;
 
     @Autowired
@@ -39,9 +42,12 @@ public class AuthController {
     // 2. Dashboard Mapping
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null)
-            return "redirect:/login"; //
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null)
+            return "redirect:/login";
+
+        // Re-fetch to get latest data (city, address, points etc)
+        User user = userRepo.findByPhone(sessionUser.getPhone()).orElse(sessionUser);
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalDonations", 0);
@@ -81,6 +87,18 @@ public class AuthController {
             model.addAttribute("error", "Registration failed. Please try again.");
             return "register";
         }
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@RequestParam String city, @RequestParam String address, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            user.setCity(city);
+            user.setAddress(address);
+            userRepo.save(user); // Persistence
+            session.setAttribute("user", user); // Session update
+        }
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/logout")

@@ -384,7 +384,7 @@
                         <div class="form-group">
                             <label class="form-label">Location</label>
                             <input type="text" name="location" class="form-control" placeholder="e.g., Gulshan, Dhaka"
-                                required th:value="${donation?.location}">
+                                required th:value="${donation?.location ?: user?.address}">
                         </div>
                     </div>
 

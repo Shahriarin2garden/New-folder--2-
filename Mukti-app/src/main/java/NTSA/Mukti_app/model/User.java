@@ -30,6 +30,11 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String permanentAddress;
 
+    private String city;
+
+    @Column(columnDefinition = "TEXT")
+    private String address;
+
     @Column(name = "points")
     private Integer points = 0;
 
@@ -100,6 +105,22 @@ public class User {
 
     public void setPermanentAddress(String permanentAddress) {
         this.permanentAddress = permanentAddress;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Integer getPoints() {
