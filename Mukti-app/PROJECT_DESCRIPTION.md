@@ -61,6 +61,12 @@ Gamifying community service to encourage participation:
 * **Security**: Integrated User Authentication with Role-based Access (Donor/Receiver).
 * **Design Library**: FontAwesome for iconography, Google Fonts for dynamic typography.
 
+### Database Configuration
+
+* **JDBC URL**: `jdbc:h2:file:./data/mukti-db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE`
+* **Console**: `http://localhost:8080/h2-console`
+* **Credentials**: User: `sa`, Password: *(blank)*
+
 ---
 
 ## 🚀 Impact Metrics
