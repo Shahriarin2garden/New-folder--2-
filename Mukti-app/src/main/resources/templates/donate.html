@@ -355,7 +355,8 @@
                     <div class="form-group">
                         <label class="form-label">Food Name</label>
                         <input type="text" name="foodName" class="form-control" placeholder="e.g., Chicken Biryani"
-                            required th:value="${targetRequest != null ? targetRequest.foodName : (donation?.foodName)}">
+                            required
+                            th:value="${targetRequest != null ? targetRequest.foodName : (donation?.foodName)}">
                         <div class="food-types">
                             <span class="food-type-badge" data-food="Biryani">Biryani</span>
                             <span class="food-type-badge" data-food="Rice">Rice</span>
