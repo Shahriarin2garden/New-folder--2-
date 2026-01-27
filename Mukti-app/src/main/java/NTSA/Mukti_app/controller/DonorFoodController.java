@@ -44,7 +44,7 @@ public class DonorFoodController {
             foodPost.setDonorPhone(user.getPhone());
             service.donate(foodPost);
             historyRepo.save(new History(user.getPhone(), foodPost.getFoodName(), foodPost.getLocation(), "DONOR",
-                    "Available", null, null));
+                    "Available", null, null, foodPost.getId()));
 
             // Broadcast donation notification
             String msg = user.getName() + " posted donation: " + foodPost.getFoodName() + " (" + foodPost.getLocation()

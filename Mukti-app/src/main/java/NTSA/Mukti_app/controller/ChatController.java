@@ -33,7 +33,7 @@ public class ChatController {
     private NTSA.Mukti_app.service.NotificationService notificationService;
 
     // View chat list page
-    @GetMapping
+    @GetMapping(value = { "", "/list" })
     public String chatListPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null)

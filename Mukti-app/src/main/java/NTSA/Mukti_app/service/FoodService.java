@@ -24,10 +24,11 @@ public class FoodService {
         return repo.findAll();
     }
 
-    public void received(Long id) {
+    public void received(Long id, String receiverPhone) {
         FoodPost food = repo.findById(id).orElse(null);
         if (food != null) {
             food.setReceived(true);
+            food.setReceiverPhone(receiverPhone);
             repo.save(food);
         }
     }

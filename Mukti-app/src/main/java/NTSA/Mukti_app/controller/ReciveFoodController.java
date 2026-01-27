@@ -40,15 +40,15 @@ public class ReciveFoodController {
     @ResponseBody
     public String receiveFood(@PathVariable Long id, HttpSession session) {
         User receiver = (User) session.getAttribute("user");
-        if (receiver == null) return "Error: Unauthorized";
+        if (receiver == null)
+            return "Error: Unauthorized";
 
         try {
             FoodPost food = service.allFoods().stream()
                     .filter(f -> f.getId().equals(id)).findFirst().orElse(null);
 
             if (food != null && !food.isReceived()) {
-                food.setReceiverPhone(receiver.getPhone());
-                service.received(id);
+                service.received(id, receiver.getPhone());
 
                 historyRepo.save(new History(receiver.getPhone(), food.getFoodName(), food.getLocation(),
                         "RECEIVER", "Processing", food.getDonorName(), food.getDonorPhone()));
@@ -67,20 +67,19 @@ public class ReciveFoodController {
                 // Create initial chat message
                 try {
                     ChatMessage initialMessage = new ChatMessage(
-                        id,
-                        receiver.getPhone(),
-                        receiver.getName(),
-                        food.getDonorPhone(),
-                        "Hi! I would like to receive the " + food.getFoodName() + ". Can we arrange the pickup?"
-                    );
+                            id,
+                            receiver.getPhone(),
+                            receiver.getName(),
+                            food.getDonorPhone(),
+                            "Hi! I would like to receive the " + food.getFoodName() + ". Can we arrange the pickup?");
                     chatMessageRepository.save(initialMessage);
 
                     // Notify the donor
                     notificationService.notifyUser(
-                        food.getDonorPhone(), 
-                        "Your food post '" + food.getFoodName() + "' was successfully requested by " + receiver.getName(), 
-                        "message"
-                    );
+                            food.getDonorPhone(),
+                            "Your food post '" + food.getFoodName() + "' was successfully requested by "
+                                    + receiver.getName(),
+                            "message");
 
                 } catch (Exception e) {
                     // Log but don't fail the receive operation
@@ -90,6 +89,8 @@ public class ReciveFoodController {
                 return "Success";
             }
             return "Error: Already Taken";
-        } catch (Exception e) { return "Error"; }
+        } catch (Exception e) {
+            return "Error";
+        }
     }
 }

@@ -16,12 +16,15 @@ public class History {
     private String status; // Available, Processing, Received, Cancelled
     private String otherPartyName;
     private String otherPartyPhone;
+    private Long foodPostId;
     private LocalDateTime activityTime = LocalDateTime.now();
 
     // Constructors, getters, and setters
-    public History() {}
+    public History() {
+    }
 
-    public History(String userPhone, String foodName, String location, String role, String status, String otherPartyName, String otherPartyPhone) {
+    public History(String userPhone, String foodName, String location, String role, String status,
+            String otherPartyName, String otherPartyPhone, Long foodPostId) {
         this.userPhone = userPhone;
         this.foodName = foodName;
         this.location = location;
@@ -29,6 +32,7 @@ public class History {
         this.status = status;
         this.otherPartyName = otherPartyName;
         this.otherPartyPhone = otherPartyPhone;
+        this.foodPostId = foodPostId;
     }
 
     // Getters and Setters
@@ -94,6 +98,14 @@ public class History {
 
     public void setOtherPartyPhone(String otherPartyPhone) {
         this.otherPartyPhone = otherPartyPhone;
+    }
+
+    public Long getFoodPostId() {
+        return foodPostId;
+    }
+
+    public void setFoodPostId(Long foodPostId) {
+        this.foodPostId = foodPostId;
     }
 
     public LocalDateTime getActivityTime() {
