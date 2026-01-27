@@ -29,6 +29,9 @@ public class ChatController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NTSA.Mukti_app.service.NotificationService notificationService;
+
     // View chat list page
     @GetMapping
     public String chatListPage(HttpSession session, Model model) {
@@ -197,6 +200,9 @@ public class ChatController {
 
             ChatMessage chatMsg = new ChatMessage(foodPostId, userPhone, user.getName(), targetPhone, message.trim());
             chatMessageRepository.save(chatMsg);
+
+            // Notify Receiver
+            notificationService.notifyUser(targetPhone, "New message from " + user.getName(), "message");
 
             return ResponseEntity.ok(Map.of("success", true, "message", chatMsg));
         } catch (Exception e) {

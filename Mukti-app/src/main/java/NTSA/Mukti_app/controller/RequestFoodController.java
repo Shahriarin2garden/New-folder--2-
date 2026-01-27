@@ -17,6 +17,9 @@ public class RequestFoodController {
     @Autowired
     private FoodRequestRepository requestRepo;
 
+    @Autowired
+    private NTSA.Mukti_app.service.NotificationService notificationService;
+
     @GetMapping("/request")
     public String requestPage(HttpSession session, Model model) {
         if (session.getAttribute("user") == null)
@@ -35,6 +38,11 @@ public class RequestFoodController {
             foodRequest.setRequestTime(LocalDateTime.now());
             foodRequest.setStatus("Pending");
             requestRepo.save(foodRequest);
+
+            // Broadcast request notification
+            String msg = user.getName() + " requested: " + foodRequest.getFoodName() + " (" + foodRequest.getLocation()
+                    + ")";
+            notificationService.notifyAll(msg, "request");
         }
         return "redirect:/dashboard?success=Request submitted successfully";
     }

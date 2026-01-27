@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import NTSA.Mukti_app.service.NotificationService;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // 1. View Mapping (GET)
     @GetMapping("/")
@@ -36,7 +40,8 @@ public class AuthController {
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login"; //
+        if (user == null)
+            return "redirect:/login"; //
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalDonations", 0);
@@ -51,10 +56,13 @@ public class AuthController {
 
     // 3. Action Mappings
     @PostMapping("/login")
-    public String login(@RequestParam String identifier, @RequestParam String password, HttpSession session, Model model) {
+    public String login(@RequestParam String identifier, @RequestParam String password, HttpSession session,
+            Model model) {
         User user = authService.login(identifier, password);
         if (user != null) {
             session.setAttribute("user", user);
+            // Broadcast login notification
+            notificationService.notifyAll(user.getName() + " just logged in!", "login");
             return "redirect:/dashboard"; //
         }
         model.addAttribute("error", "Invalid Credentials");

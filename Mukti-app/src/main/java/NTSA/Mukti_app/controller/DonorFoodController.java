@@ -26,6 +26,9 @@ public class DonorFoodController {
     @Autowired
     private NTSA.Mukti_app.repository.UserRepository userRepo;
 
+    @Autowired
+    private NTSA.Mukti_app.service.NotificationService notificationService;
+
     @GetMapping("/donate")
     public String donatePage(HttpSession session) {
         if (session.getAttribute("user") == null)
@@ -42,6 +45,11 @@ public class DonorFoodController {
             service.donate(foodPost);
             historyRepo.save(new History(user.getPhone(), foodPost.getFoodName(), foodPost.getLocation(), "DONOR",
                     "Available", null, null));
+
+            // Broadcast donation notification
+            String msg = user.getName() + " posted donation: " + foodPost.getFoodName() + " (" + foodPost.getLocation()
+                    + ")";
+            notificationService.notifyAll(msg, "donation");
         }
         return "redirect:/dashboard";
     }

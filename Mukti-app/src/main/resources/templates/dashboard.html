@@ -658,7 +658,99 @@
         </footer>
     </div>
 
-    <script>
+    <style>
+        .notification-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .notification-toast {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            color: white;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .notification-toast.login {
+            border-left-color: var(--secondary);
+        }
+
+        .notification-toast.donation {
+            border-left-color: #F59E0B;
+        }
+
+        .notification-toast.message {
+            border-left-color: #EC4899;
+        }
+
+        .notification-toast.request {
+            border-left-color: #8B5CF6;
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+            color: var(--primary-light);
+            margin-top: 2px;
+        }
+
+        .notification-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .notification-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <!-- SockJS and Stomp -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <div id="notification-container" class="notification-container"></div>
+
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
             // Navbar scroll effect
             window.addEventListener('scroll', () => {
@@ -691,6 +783,72 @@
                 });
             };
             animateStats();
+
+            // Notification Logic
+            const userPhone = /*[[${user != null ? user.phone : ''}]]*/ '';
+
+            if (userPhone) {
+                const socket = new SockJS('/ws-stomp');
+                const stompClient = Stomp.over(socket);
+                stompClient.debug = null; // Disable debug logs
+
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected to Notifications: ' + frame);
+
+                    // Subscribe to global notifications (login, public announcements)
+                    stompClient.subscribe('/topic/notifications', function (notification) {
+                        showNotification(JSON.parse(notification.body));
+                    });
+
+                    // Subscribe to private notifications (messages, requests)
+                    stompClient.subscribe('/topic/notifications/' + userPhone, function (notification) {
+                        showNotification(JSON.parse(notification.body));
+                    });
+                });
+            }
+
+            function showNotification(data) {
+                const container = document.getElementById('notification-container');
+                const toast = document.createElement('div');
+                toast.className = `notification-toast ${data.type || 'info'}`;
+
+                let icon = 'fa-bell';
+                let title = 'Notification';
+
+                switch (data.type) {
+                    case 'login': icon = 'fa-user-circle'; title = 'New Login'; break;
+                    case 'donation': icon = 'fa-gift'; title = 'New Donation'; break;
+                    case 'request': icon = 'fa-hand-holding-heart'; title = 'New Request'; break;
+                    case 'message': icon = 'fa-comment-alt'; title = 'New Message'; break;
+                }
+
+                toast.innerHTML = `
+                    <div class="notification-icon"><i class="fas ${icon}"></i></div>
+                    <div class="notification-content">
+                        <h4>${title}</h4>
+                        <p>${data.message}</p>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                // Sound effect (optional)
+                // const audio = new Audio('/sounds/notification.mp3');
+                // audio.play().catch(e => {});
+
+                // Auto remove
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => toast.remove(), 500);
+                }, 5000);
+
+                toast.onclick = () => {
+                    toast.remove();
+                    if (data.type === 'message') window.location.href = '/chat';
+                    if (data.type === 'donation') window.location.href = '/food/receive-page';
+                    if (data.type === 'request') window.location.href = '/food/donate';
+                };
+            }
         });
     </script>
 </body>
