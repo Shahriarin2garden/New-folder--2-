@@ -355,7 +355,7 @@
                     <div class="form-group">
                         <label class="form-label">Food Name</label>
                         <input type="text" name="foodName" class="form-control" placeholder="e.g., Chicken Biryani"
-                            required th:value="${donation?.foodName}">
+                            required th:value="${targetRequest != null ? targetRequest.foodName : (donation?.foodName)}">
                         <div class="food-types">
                             <span class="food-type-badge" data-food="Biryani">Biryani</span>
                             <span class="food-type-badge" data-food="Rice">Rice</span>
@@ -379,7 +379,7 @@
                                         class="fas fa-minus"></i></button>
                                 <input type="number" id="quantity" name="quantity" class="form-control"
                                     style="text-align: center;" min="1" max="100" value="4" required
-                                    th:value="${donation?.quantity}">
+                                    th:value="${targetRequest != null ? targetRequest.quantity : (donation?.quantity ?: 4)}">
                                 <button type="button" class="quantity-btn" id="increase-qty"><i
                                         class="fas fa-plus"></i></button>
                             </div>
