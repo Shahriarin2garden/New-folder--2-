@@ -147,6 +147,7 @@ public class DonorFoodController {
             userRepo.findByPhone(h.getUserPhone()).ifPresent(user -> {
                 user.setPoints(user.getPoints() + 10);
                 userRepo.save(user);
+                notificationService.notifyUser(user.getPhone(), "You earned 10 points for your donation!", "points");
             });
 
             // If this donation was linked to a food request, mark request as Received
@@ -193,6 +194,8 @@ public class DonorFoodController {
             userRepo.findByPhone(h.getUserPhone()).ifPresent(user -> {
                 user.setPoints(user.getPoints() + 10);
                 userRepo.save(user);
+                notificationService.notifyUser(user.getPhone(),
+                        "You earned 10 points for fulfilling a community request!", "points");
             });
 
             // Notify the requester
@@ -223,6 +226,8 @@ public class DonorFoodController {
             h.setStatus("Cancelled");
             historyRepo.save(h);
             syncStatus(h.getFoodName(), "Cancelled");
+            notificationService.notifyUser(h.getUserPhone(), "Activity '" + h.getFoodName() + "' has been cancelled.",
+                    "cancel");
             return "Success";
         }
         return "Error";
@@ -260,9 +265,12 @@ public class DonorFoodController {
                 notificationService.notifyUser(
                         h.getOtherPartyPhone(),
                         "The donation for your request '" + h.getFoodName() + "' has been cancelled by "
-                                + h.getOtherPartyName(),
+                                + (h.getOtherPartyName() != null ? h.getOtherPartyName() : "the donor"),
                         "update");
             }
+
+            notificationService.notifyUser(h.getUserPhone(),
+                    "You cancelled the donation for request '" + h.getFoodName() + "'.", "cancel");
 
             return "Success";
         }

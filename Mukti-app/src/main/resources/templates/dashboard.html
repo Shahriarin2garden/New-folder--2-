@@ -620,11 +620,12 @@
             </div>
             <div class="quick-stats">
                 <div class="quick-stat-item">
-                    <span class="qs-number" th:text="${user.points}">0</span>
+                    <span class="qs-number" id="stat-points" th:text="${user.points}">0</span>
                     <span class="qs-label">Points</span>
                 </div>
                 <div class="quick-stat-item">
-                    <span class="qs-number" th:text="${stats != null ? stats.activePosts : '0'}">0</span>
+                    <span class="qs-number" id="stat-active"
+                        th:text="${stats != null ? stats.activePosts : '0'}">0</span>
                     <span class="qs-label">Active</span>
                 </div>
             </div>
@@ -727,17 +728,20 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <i class="fas fa-gift stat-icon"></i>
-                    <span class="stat-number" th:text="${stats != null ? stats.totalDonations : '0'}">0</span>
+                    <span class="stat-number" id="stat-given"
+                        th:text="${stats != null ? stats.totalDonations : '0'}">0</span>
                     <span class="stat-label">Given</span>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-heart stat-icon"></i>
-                    <span class="stat-number" th:text="${stats != null ? stats.totalReceived : '0'}">0</span>
+                    <span class="stat-number" id="stat-received"
+                        th:text="${stats != null ? stats.totalReceived : '0'}">0</span>
                     <span class="stat-label">Received</span>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-users stat-icon"></i>
-                    <span class="stat-number" th:text="${stats != null ? stats.peopleHelped : '1'}">1</span>
+                    <span class="stat-number" id="stat-lives"
+                        th:text="${stats != null ? stats.peopleHelped : '0'}">0</span>
                     <span class="stat-label">Lives</span>
                 </div>
                 <div class="stat-card">
@@ -943,14 +947,48 @@
 
                     // Subscribe to global notifications (login, public announcements)
                     stompClient.subscribe('/topic/notifications', function (notification) {
-                        showNotification(JSON.parse(notification.body));
+                        const data = JSON.parse(notification.body);
+                        showNotification(data);
+                        if (data.type === 'donation') refreshStats();
                     });
 
                     // Subscribe to private notifications (messages, requests)
                     stompClient.subscribe('/topic/notifications/' + userPhone, function (notification) {
-                        showNotification(JSON.parse(notification.body));
+                        const data = JSON.parse(notification.body);
+                        showNotification(data);
+                        refreshStats(); // Update stats for any private activity
                     });
                 });
+            }
+
+            async function refreshStats() {
+                try {
+                    const response = await fetch('/api/user-stats');
+                    if (response.ok) {
+                        const stats = await response.json();
+                        updateElement('stat-points', stats.points);
+                        updateElement('stat-active', stats.activePosts);
+                        updateElement('stat-given', stats.totalDonations);
+                        updateElement('stat-received', stats.totalReceived);
+                        updateElement('stat-lives', stats.peopleHelped);
+                    }
+                } catch (err) { console.error('Stats fetch error:', err); }
+            }
+
+            function updateElement(id, value) {
+                const el = document.getElementById(id);
+                if (el) {
+                    const current = parseInt(el.textContent) || 0;
+                    if (current !== value) {
+                        el.style.transform = 'scale(1.2)';
+                        el.style.color = 'var(--primary-light)';
+                        setTimeout(() => {
+                            el.textContent = value;
+                            el.style.transform = 'scale(1)';
+                            el.style.color = '';
+                        }, 300);
+                    }
+                }
             }
 
             function showNotification(data) {
@@ -966,6 +1004,9 @@
                     case 'donation': icon = 'fa-gift'; title = 'New Donation'; break;
                     case 'request': icon = 'fa-hand-holding-heart'; title = 'New Request'; break;
                     case 'message': icon = 'fa-comment-alt'; title = 'New Message'; break;
+                    case 'points': icon = 'fa-trophy'; title = 'Points Earned!'; break;
+                    case 'update': icon = 'fa-sync-alt'; title = 'Status Updated'; break;
+                    case 'cancel': icon = 'fa-times-circle'; title = 'Cancelled'; break;
                 }
 
                 toast.innerHTML = `

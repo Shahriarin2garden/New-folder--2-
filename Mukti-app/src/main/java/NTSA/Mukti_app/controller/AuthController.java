@@ -21,6 +21,9 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
+    private NTSA.Mukti_app.repository.HistoryRepository historyRepo;
+
+    @Autowired
     private NotificationService notificationService;
 
     // 1. View Mapping (GET)
@@ -49,11 +52,33 @@ public class AuthController {
         // Re-fetch to get latest data (city, address, points etc)
         User user = userRepo.findByPhone(sessionUser.getPhone()).orElse(sessionUser);
 
+        // Calculate stats from History
+        java.util.List<NTSA.Mukti_app.model.History> userHistory = historyRepo
+                .findByUserPhoneOrderByActivityTimeDesc(user.getPhone());
+
+        long totalDonations = userHistory.stream()
+                .filter(h -> "DONOR".equals(h.getRole()) && "Received".equals(h.getStatus()))
+                .count();
+        long totalReceived = userHistory.stream()
+                .filter(h -> "RECEIVER".equals(h.getRole()) && "Received".equals(h.getStatus()))
+                .count();
+        long activePosts = userHistory.stream()
+                .filter(h -> "DONOR".equals(h.getRole())
+                        && ("Available".equals(h.getStatus()) || "Processing".equals(h.getStatus())))
+                .count();
+
+        // Count distinct people helped (otherPartyPhone)
+        long peopleHelped = userHistory.stream()
+                .filter(h -> "DONOR".equals(h.getRole()) && h.getOtherPartyPhone() != null)
+                .map(NTSA.Mukti_app.model.History::getOtherPartyPhone)
+                .distinct()
+                .count();
+
         Map<String, Object> stats = new HashMap<>();
-        stats.put("totalDonations", 0);
-        stats.put("totalReceived", 0);
-        stats.put("activePosts", 0);
-        stats.put("peopleHelped", 0);
+        stats.put("totalDonations", totalDonations);
+        stats.put("totalReceived", totalReceived);
+        stats.put("activePosts", activePosts);
+        stats.put("peopleHelped", peopleHelped > 0 ? peopleHelped : 0);
 
         model.addAttribute("user", user);
         model.addAttribute("stats", stats);
@@ -99,6 +124,37 @@ public class AuthController {
             session.setAttribute("user", user); // Session update
         }
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("/api/user-stats")
+    @ResponseBody
+    public Map<String, Object> getUserStats(HttpSession session) {
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null)
+            return new HashMap<>();
+
+        User user = userRepo.findByPhone(sessionUser.getPhone()).orElse(sessionUser);
+        java.util.List<NTSA.Mukti_app.model.History> userHistory = historyRepo
+                .findByUserPhoneOrderByActivityTimeDesc(user.getPhone());
+
+        long totalDonations = userHistory.stream()
+                .filter(h -> "DONOR".equals(h.getRole()) && "Received".equals(h.getStatus())).count();
+        long totalReceived = userHistory.stream()
+                .filter(h -> "RECEIVER".equals(h.getRole()) && "Received".equals(h.getStatus())).count();
+        long activePosts = userHistory.stream().filter(h -> "DONOR".equals(h.getRole())
+                && ("Available".equals(h.getStatus()) || "Processing".equals(h.getStatus()))).count();
+        long peopleHelped = userHistory.stream()
+                .filter(h -> "DONOR".equals(h.getRole()) && h.getOtherPartyPhone() != null)
+                .map(NTSA.Mukti_app.model.History::getOtherPartyPhone).distinct().count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("points", user.getPoints());
+        stats.put("totalDonations", totalDonations);
+        stats.put("totalReceived", totalReceived);
+        stats.put("activePosts", activePosts);
+        stats.put("peopleHelped", peopleHelped);
+
+        return stats;
     }
 
     @GetMapping("/logout")
