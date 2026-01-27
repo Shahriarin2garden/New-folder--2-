@@ -27,6 +27,9 @@ public class ReciveFoodController {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
 
+    @Autowired
+    private NTSA.Mukti_app.service.NotificationService notificationService;
+
     @GetMapping("/receive-page")
     public String receivePage(Model model) {
         model.addAttribute("foods", service.allFoods());
@@ -71,6 +74,14 @@ public class ReciveFoodController {
                         "Hi! I would like to receive the " + food.getFoodName() + ". Can we arrange the pickup?"
                     );
                     chatMessageRepository.save(initialMessage);
+
+                    // Notify the donor
+                    notificationService.notifyUser(
+                        food.getDonorPhone(), 
+                        "Your food post '" + food.getFoodName() + "' was successfully requested by " + receiver.getName(), 
+                        "message"
+                    );
+
                 } catch (Exception e) {
                     // Log but don't fail the receive operation
                     System.err.println("Failed to create initial chat message: " + e.getMessage());
