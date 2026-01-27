@@ -403,6 +403,61 @@
         </div>
     </div>
 
+    <!-- Food Requests Section -->
+    <div class="section">
+        <h2 class="section-title">
+            <i class="fas fa-hand-holding-heart"></i>
+            Food I've Requested
+        </h2>
+        <div class="history-grid" th:if="${foodRequests != null && !foodRequests.empty}">
+            <div th:each="req : ${foodRequests}" class="history-card">
+                <div class="card-header">
+                    <div class="info-group">
+                        <h3 class="food-name" th:text="${req.foodName}">Food Name</h3>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> <span
+                                th:text="${req.location}">Location</span></p>
+                    </div>
+                    <div class="status-group">
+                        <span class="status-badge"
+                            th:classappend="${req.status == 'Pending' ? 'status-available' : (req.status == 'Processing' ? 'status-processing' : 'status-received')}"
+                            th:text="${req.status}">Status</span>
+                        <span class="time-badge"><i class="fas fa-clock"></i> <span
+                                th:text="${#temporals.format(req.requestTime, 'dd MMM yyyy')}">Date</span></span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="info-item">
+                        <span class="label">Quantity:</span>
+                        <span class="value" th:text="${req.quantity} + ' servings'">Quantity</span>
+                    </div>
+                    <div class="info-item" th:if="${req.description}">
+                        <span class="label">Details:</span>
+                        <span class="value" th:text="${req.description}">Description</span>
+                    </div>
+                    <div class="info-item" th:if="${req.donorName}">
+                        <span class="label">Donor:</span>
+                        <span class="value" th:text="${req.donorName}">Donor Name</span>
+                    </div>
+                </div>
+
+                <div class="card-actions"
+                    th:if="${req.status == 'Processing' && req.foodPostId != null && req.donorPhone != null}">
+                    <a th:href="@{'/chat/room/' + ${req.foodPostId} + '?otherPhone=' + ${req.donorPhone}}"
+                        class="btn btn-primary">
+                        <i class="fas fa-comments"></i> Chat with Donor
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${foodRequests == null || foodRequests.empty}"
+            style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.3; margin-bottom: 16px;"></i>
+            <p>No food requests yet.</p>
+        </div>
+    </div>
+
     <script>
         async function updateStatus(id, action) {
             if (!confirm(`Are you sure you want to ${action} this activity?`)) return;

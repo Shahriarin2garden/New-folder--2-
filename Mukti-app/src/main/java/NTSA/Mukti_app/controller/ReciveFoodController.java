@@ -32,7 +32,14 @@ public class ReciveFoodController {
 
     @GetMapping("/receive-page")
     public String receivePage(Model model) {
-        model.addAttribute("foods", service.allFoods());
+        List<FoodPost> allFoods = service.allFoods();
+        // Filter out expired food posts
+        List<FoodPost> availableFoods = allFoods.stream()
+                .filter(food -> food.getExpireTime() == null
+                        || food.getExpireTime().isAfter(java.time.LocalDateTime.now()))
+                .filter(food -> !food.isReceived())
+                .toList();
+        model.addAttribute("foods", availableFoods);
         return "receive";
     }
 

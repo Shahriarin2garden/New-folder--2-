@@ -14,10 +14,14 @@ public class FoodRequest {
     private String location;
     private String description;
     private LocalDateTime requestTime;
-    private String status; // Pending, Fulfilled
+    private String status; // Pending, Processing, Received
 
     private String requesterName;
     private String requesterPhone;
+
+    private String donorPhone;
+    private String donorName;
+    private Long foodPostId; // Link to the actual food donation
 
     public Long getId() {
         return id;
@@ -89,5 +93,29 @@ public class FoodRequest {
 
     public void setRequesterPhone(String requesterPhone) {
         this.requesterPhone = requesterPhone;
+    }
+
+    public String getDonorPhone() {
+        return donorPhone;
+    }
+
+    public void setDonorPhone(String donorPhone) {
+        this.donorPhone = donorPhone;
+    }
+
+    public String getDonorName() {
+        return donorName;
+    }
+
+    public void setDonorName(String donorName) {
+        this.donorName = donorName;
+    }
+
+    public Long getFoodPostId() {
+        return foodPostId;
+    }
+
+    public void setFoodPostId(Long foodPostId) {
+        this.foodPostId = foodPostId;
     }
 }

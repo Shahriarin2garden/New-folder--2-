@@ -349,6 +349,9 @@
                 </div>
 
                 <form th:action="@{/food/donate}" method="post">
+                    <!-- Hidden field to link donation to request -->
+                    <input type="hidden" name="requestId" th:value="${requestId}">
+
                     <div class="form-group">
                         <label class="form-label">Food Name</label>
                         <input type="text" name="foodName" class="form-control" placeholder="e.g., Chicken Biryani"

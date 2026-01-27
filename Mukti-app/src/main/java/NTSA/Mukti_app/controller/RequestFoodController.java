@@ -25,7 +25,13 @@ public class RequestFoodController {
         if (session.getAttribute("user") == null)
             return "redirect:/login";
         model.addAttribute("request", new FoodRequest());
-        model.addAttribute("requests", requestRepo.findAllByOrderByRequestTimeDesc());
+
+        // Only show Pending and Processing requests in feed (hide Received/Cancelled)
+        java.util.List<FoodRequest> activeRequests = requestRepo.findAllByOrderByRequestTimeDesc().stream()
+                .filter(req -> "Pending".equals(req.getStatus()) || "Processing".equals(req.getStatus()))
+                .toList();
+
+        model.addAttribute("requests", activeRequests);
         return "request";
     }
 

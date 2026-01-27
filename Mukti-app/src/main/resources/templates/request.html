@@ -268,6 +268,25 @@
             background: rgba(139, 92, 246, 0.05);
         }
 
+        .donate-btn-small {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
         .req-header {
             display: flex;
             justify-content: space-between;
@@ -292,6 +311,7 @@
             margin-bottom: 16px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -426,19 +446,26 @@
                         <span><i class="fas fa-map-marker-alt"></i> <span th:text="${req.location}">Dhaka</span></span>
                     </div>
 
-                    <div
-                        style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div
-                                style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
-                                <i class="fas fa-user"></i>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div
+                                    style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span style="font-size: 0.85rem; color: var(--text-muted);"
+                                    th:text="${req.requesterName}">User</span>
                             </div>
-                            <span style="font-size: 0.85rem; color: var(--text-muted);"
-                                th:text="${req.requesterName}">User</span>
+                            <a th:href="'tel:' + ${req.requesterPhone}"
+                                style="color: var(--primary-light); text-decoration: none; font-size: 0.9rem;"><i
+                                    class="fas fa-phone"></i> Contact</a>
                         </div>
-                        <a th:href="'tel:' + ${req.requesterPhone}"
-                            style="color: var(--primary-light); text-decoration: none; font-size: 0.9rem;"><i
-                                class="fas fa-phone"></i> Contact</a>
+                        <!-- Donate Button (only shown for Pending requests) -->
+                        <a th:if="${req.status == 'Pending'}" th:href="@{/food/donate(requestId=${req.id})}"
+                            class="donate-btn-small" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-hand-holding-heart"></i> Donate to This Request
+                        </a>
                     </div>
                 </div>
 

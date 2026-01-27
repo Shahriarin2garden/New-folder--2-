@@ -32,8 +32,11 @@ public class DonorFoodController {
     @Autowired
     private NTSA.Mukti_app.service.NotificationService notificationService;
 
+    @Autowired
+    private NTSA.Mukti_app.repository.FoodRequestRepository foodRequestRepo;
+
     @GetMapping("/donate")
-    public String donatePage(HttpSession session, Model model) {
+    public String donatePage(@RequestParam(required = false) Long requestId, HttpSession session, Model model) {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null)
             return "redirect:/login";
@@ -41,11 +44,19 @@ public class DonorFoodController {
         // Fetch latest version of user to get current address
         User user = userRepo.findByPhone(sessionUser.getPhone()).orElse(sessionUser);
         model.addAttribute("user", user);
+
+        // If donating in response to a request, pass it to the view
+        if (requestId != null) {
+            model.addAttribute("requestId", requestId);
+        }
+
         return "donate";
     }
 
     @PostMapping("/donate")
-    public String submitDonation(@ModelAttribute FoodPost foodPost, HttpSession session) {
+    public String submitDonation(@ModelAttribute FoodPost foodPost,
+            @RequestParam(required = false) Long requestId,
+            HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
             foodPost.setDonorName(user.getName());
@@ -53,6 +64,17 @@ public class DonorFoodController {
             service.donate(foodPost);
             historyRepo.save(new History(user.getPhone(), foodPost.getFoodName(), foodPost.getLocation(), "DONOR",
                     "Available", null, null, foodPost.getId()));
+
+            // If this donation is in response to a request, link them and update status
+            if (requestId != null) {
+                foodRequestRepo.findById(requestId).ifPresent(request -> {
+                    request.setStatus("Processing");
+                    request.setDonorPhone(user.getPhone());
+                    request.setDonorName(user.getName());
+                    request.setFoodPostId(foodPost.getId());
+                    foodRequestRepo.save(request);
+                });
+            }
 
             // Broadcast donation notification
             String msg = user.getName() + " posted donation: " + foodPost.getFoodName() + " (" + foodPost.getLocation()
@@ -101,6 +123,14 @@ public class DonorFoodController {
         }
         model.addAttribute("donations", donations);
         model.addAttribute("receives", receives);
+
+        // Also include food requests made by this user
+        List<NTSA.Mukti_app.model.FoodRequest> userRequests = foodRequestRepo.findAll().stream()
+                .filter(req -> user.getPhone().equals(req.getRequesterPhone()))
+                .sorted((a, b) -> b.getRequestTime().compareTo(a.getRequestTime()))
+                .toList();
+        model.addAttribute("foodRequests", userRequests);
+
         return "history";
     }
 
@@ -118,6 +148,16 @@ public class DonorFoodController {
                 user.setPoints(user.getPoints() + 10);
                 userRepo.save(user);
             });
+
+            // If this donation was linked to a food request, mark request as Received
+            if (h.getFoodPostId() != null) {
+                foodRequestRepo.findAll().stream()
+                        .filter(req -> h.getFoodPostId().equals(req.getFoodPostId()))
+                        .forEach(req -> {
+                            req.setStatus("Received");
+                            foodRequestRepo.save(req);
+                        });
+            }
 
             return "Success";
         }
