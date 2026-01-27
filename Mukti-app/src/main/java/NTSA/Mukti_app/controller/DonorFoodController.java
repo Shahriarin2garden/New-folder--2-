@@ -164,6 +164,51 @@ public class DonorFoodController {
         return "Error";
     }
 
+    @PostMapping("/complete-request/{id}")
+    @ResponseBody
+    public String completeRequest(@PathVariable Long id) {
+        History h = historyRepo.findById(id).orElse(null);
+        if (h != null && "DONOR".equals(h.getRole())) {
+            // Update donor's history to Received
+            h.setStatus("Received");
+            historyRepo.save(h);
+
+            // Update the food request status
+            foodRequestRepo.findById(h.getFoodPostId()).ifPresent(req -> {
+                req.setStatus("Received");
+                foodRequestRepo.save(req);
+            });
+
+            // Update requester's history to Received
+            historyRepo.findAll().stream()
+                    .filter(history -> history.getFoodPostId() != null
+                            && history.getFoodPostId().equals(h.getFoodPostId())
+                            && "RECEIVER".equals(history.getRole()))
+                    .forEach(history -> {
+                        history.setStatus("Received");
+                        historyRepo.save(history);
+                    });
+
+            // Award 10 points to donor
+            userRepo.findByPhone(h.getUserPhone()).ifPresent(user -> {
+                user.setPoints(user.getPoints() + 10);
+                userRepo.save(user);
+            });
+
+            // Notify the requester
+            if (h.getOtherPartyPhone() != null) {
+                notificationService.notifyUser(
+                        h.getOtherPartyPhone(),
+                        "Your food request '" + h.getFoodName() + "' has been marked as received by "
+                                + h.getOtherPartyName(),
+                        "update");
+            }
+
+            return "Success";
+        }
+        return "Error";
+    }
+
     @GetMapping("/leaderboard")
     public String viewLeaderboard(Model model) {
         model.addAttribute("topDonors", userRepo.findAllByOrderByPointsDesc());
@@ -178,6 +223,47 @@ public class DonorFoodController {
             h.setStatus("Cancelled");
             historyRepo.save(h);
             syncStatus(h.getFoodName(), "Cancelled");
+            return "Success";
+        }
+        return "Error";
+    }
+
+    @PostMapping("/cancel-request/{id}")
+    @ResponseBody
+    public String cancelRequest(@PathVariable Long id) {
+        History h = historyRepo.findById(id).orElse(null);
+        if (h != null && "DONOR".equals(h.getRole())) {
+            // Update donor's history to Cancelled
+            h.setStatus("Cancelled");
+            historyRepo.save(h);
+
+            // Update the food request status back to Pending
+            foodRequestRepo.findById(h.getFoodPostId()).ifPresent(req -> {
+                req.setStatus("Pending");
+                req.setDonorPhone(null);
+                req.setDonorName(null);
+                foodRequestRepo.save(req);
+            });
+
+            // Update requester's history to Cancelled
+            historyRepo.findAll().stream()
+                    .filter(history -> history.getFoodPostId() != null
+                            && history.getFoodPostId().equals(h.getFoodPostId())
+                            && "RECEIVER".equals(history.getRole()))
+                    .forEach(history -> {
+                        history.setStatus("Cancelled");
+                        historyRepo.save(history);
+                    });
+
+            // Notify the requester
+            if (h.getOtherPartyPhone() != null) {
+                notificationService.notifyUser(
+                        h.getOtherPartyPhone(),
+                        "The donation for your request '" + h.getFoodName() + "' has been cancelled by "
+                                + h.getOtherPartyName(),
+                        "update");
+            }
+
             return "Success";
         }
         return "Error";

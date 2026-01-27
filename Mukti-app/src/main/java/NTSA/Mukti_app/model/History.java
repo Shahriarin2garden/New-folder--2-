@@ -18,6 +18,7 @@ public class History {
     private String otherPartyPhone;
     private Long foodPostId;
     private LocalDateTime activityTime = LocalDateTime.now();
+    private Boolean isRequestDonation = false; // Flag to indicate if this is a food request donation
 
     // Constructors, getters, and setters
     public History() {
@@ -114,5 +115,13 @@ public class History {
 
     public void setActivityTime(LocalDateTime activityTime) {
         this.activityTime = activityTime;
+    }
+
+    public Boolean getIsRequestDonation() {
+        return isRequestDonation;
+    }
+
+    public void setIsRequestDonation(Boolean isRequestDonation) {
+        this.isRequestDonation = isRequestDonation;
     }
 }

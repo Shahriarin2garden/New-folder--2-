@@ -462,10 +462,11 @@
                                     class="fas fa-phone"></i> Contact</a>
                         </div>
                         <!-- Donate Button (only shown for Pending requests) -->
-                        <a th:if="${req.status == 'Pending'}" th:href="@{/food/donate(requestId=${req.id})}"
-                            class="donate-btn-small" style="width: 100%; justify-content: center;">
+                        <button th:if="${req.status == 'Pending'}" th:data-request-id="${req.id}"
+                            class="donate-btn-small donate-request-btn"
+                            style="width: 100%; justify-content: center; border: none; cursor: pointer;">
                             <i class="fas fa-hand-holding-heart"></i> Donate to This Request
-                        </a>
+                        </button>
                     </div>
                 </div>
 
@@ -484,6 +485,41 @@
             const qty = document.getElementById('quantity');
             document.getElementById('decrease-qty').addEventListener('click', () => { if (qty.value > 1) qty.value--; });
             document.getElementById('increase-qty').addEventListener('click', () => { if (qty.value < 500) qty.value++; });
+
+            // Handle "Donate to This Request" buttons
+            document.querySelectorAll('.donate-request-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const requestId = this.getAttribute('data-request-id');
+                    if (confirm('Are you sure you want to donate to this request? The request will be assigned to you.')) {
+                        // Disable button and show loading
+                        this.disabled = true;
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                        fetch(`/food/respond-to-request/${requestId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                if (data === 'Success') {
+                                    alert('✅ You have successfully committed to this request! Check your history page.');
+                                    location.reload();
+                                } else {
+                                    alert('❌ ' + data);
+                                    this.disabled = false;
+                                    this.innerHTML = '<i class="fas fa-hand-holding-heart"></i> Donate to This Request';
+                                }
+                            })
+                            .catch(error => {
+                                alert('Error: ' + error);
+                                this.disabled = false;
+                                this.innerHTML = '<i class="fas fa-hand-holding-heart"></i> Donate to This Request';
+                            });
+                    }
+                });
+            });
         });
     </script>
 </body>
