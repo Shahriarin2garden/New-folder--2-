@@ -23,6 +23,9 @@ public class RequestFoodController {
     private HistoryRepository historyRepo;
 
     @Autowired
+    private NTSA.Mukti_app.repository.ChatMessageRepository chatMessageRepository;
+
+    @Autowired
     private NTSA.Mukti_app.service.NotificationService notificationService;
 
     @GetMapping("/request")
@@ -33,7 +36,7 @@ public class RequestFoodController {
 
         // Only show Pending requests in feed (hide Processing/Received/Cancelled)
         java.util.List<FoodRequest> activeRequests = requestRepo.findAllByOrderByRequestTimeDesc().stream()
-                .filter(req -> "Pending".equals(req.getStatus()))
+                .filter(req -> "Pending".equals(req.getStatus()) || "Processing".equals(req.getStatus()))
                 .toList();
 
         model.addAttribute("requests", activeRequests);
@@ -103,6 +106,22 @@ public class RequestFoodController {
                 donorHistory.setIsRequestDonation(true);
                 historyRepo.save(donorHistory);
 
+                // Create initial chat message
+                try {
+                    NTSA.Mukti_app.model.ChatMessage initialMessage = new NTSA.Mukti_app.model.ChatMessage(
+                            requestId,
+                            donor.getPhone(),
+                            donor.getName(),
+                            request.getRequesterPhone(),
+                            "Hi! I'm happy to donate " + request.getFoodName()
+                                    + " to your request. Let's arrange a pickup!",
+                            true // isRequest flag
+                    );
+                    chatMessageRepository.save(initialMessage);
+                } catch (Exception e) {
+                    System.err.println("Failed to create initial chat message: " + e.getMessage());
+                }
+
                 // Notify the requester
                 notificationService.notifyUser(
                         request.getRequesterPhone(),
@@ -110,6 +129,7 @@ public class RequestFoodController {
                         "donation");
 
                 return "Success";
+
             }
             return "Error: Request not available";
         } catch (Exception e) {

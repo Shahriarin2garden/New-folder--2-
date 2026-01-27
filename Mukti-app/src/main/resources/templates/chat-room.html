@@ -305,6 +305,7 @@
         const foodPostId = [[${ foodPost.id }]];
         const otherPhone = [[${ otherUserPhone }]].trim();
         const currentUserPhone = [[${ currentUser.phone }]].trim();
+        const isRequest = [[${ isRequest }]]; // Captured from controller
         const chatViewport = document.getElementById('chatViewport');
         const chatForm = document.getElementById('chatForm');
         const msgInput = document.getElementById('msgInput');
@@ -332,7 +333,7 @@
                 const response = await fetch('/chat/send', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ foodPostId, receiverPhone: otherPhone, message })
+                    body: JSON.stringify({ foodPostId, receiverPhone: otherPhone, message, isRequest })
                 });
                 if (response.ok) {
                     const data = await response.json();
@@ -344,7 +345,7 @@
 
         async function pollMessages() {
             try {
-                const response = await fetch(`/chat/messages/${foodPostId}?otherPhone=${otherPhone}`);
+                const response = await fetch(`/chat/messages/${foodPostId}?otherPhone=${otherPhone}&isRequest=${isRequest}`);
                 if (response.ok) {
                     const messages = await response.json();
                     if (messages.length > lastMessageCount) {

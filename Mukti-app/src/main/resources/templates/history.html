@@ -350,7 +350,7 @@
                         <i class="fas fa-times"></i> Cancel Donated
                     </button>
                     <a th:if="${item.foodPostId != null && item.otherPartyPhone != null}"
-                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone}}"
+                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone} + ${item.isRequestDonation == true ? '&isRequest=true' : ''}}"
                         class="btn btn-outline">
                         <i class="fas fa-comments"></i> Chat with Receiver
                     </a>
@@ -399,7 +399,7 @@
 
                 <div class="card-actions">
                     <a th:if="${item.status == 'Processing' && item.foodPostId != null && item.otherPartyPhone != null}"
-                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone}}"
+                        th:href="@{'/chat/room/' + ${item.foodPostId} + '?otherPhone=' + ${item.otherPartyPhone} + ${item.isRequestDonation == true ? '&isRequest=true' : ''}}"
                         class="btn btn-primary">
                         <i class="fas fa-comments"></i> Chat with Donor
                     </a>

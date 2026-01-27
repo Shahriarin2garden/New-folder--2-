@@ -274,7 +274,7 @@
                 </div>
 
                 <a th:each="conv : ${donations}"
-                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone}}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone} + ${conv.isRequest == true ? '&isRequest=true' : ''}}"
                     class="conv-item">
                     <div class="avatar"
                         th:text="${conv.otherUserName != null && !conv.otherUserName.isEmpty() ? conv.otherUserName.substring(0, 1).toUpperCase() : 'U'}">
@@ -304,7 +304,7 @@
                 </div>
 
                 <a th:each="conv : ${receivals}"
-                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone}}"
+                    th:href="@{'/chat/room/' + ${conv.foodPostId} + '?otherPhone=' + ${conv.otherUserPhone} + ${conv.isRequest == true ? '&isRequest=true' : ''}}"
                     class="conv-item">
                     <div class="avatar receiver"
                         th:text="${conv.otherUserName != null && !conv.otherUserName.isEmpty() ? conv.otherUserName.substring(0, 1).toUpperCase() : 'U'}">

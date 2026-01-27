@@ -35,19 +35,28 @@ public class ChatMessage {
     @Column(nullable = false)
     private String messageType = "TEXT"; // TEXT, SYSTEM
 
+    @Column(nullable = false)
+    private boolean isRequest = false; // Flag for food requests
+
     // Constructors
     public ChatMessage() {
         this.timestamp = LocalDateTime.now();
     }
 
-    public ChatMessage(Long foodPostId, String senderPhone, String senderName, 
-                      String receiverPhone, String message) {
+    public ChatMessage(Long foodPostId, String senderPhone, String senderName,
+            String receiverPhone, String message) {
         this.foodPostId = foodPostId;
         this.senderPhone = senderPhone;
         this.senderName = senderName;
         this.receiverPhone = receiverPhone;
         this.message = message;
         this.timestamp = LocalDateTime.now();
+    }
+
+    public ChatMessage(Long foodPostId, String senderPhone, String senderName,
+            String receiverPhone, String message, boolean isRequest) {
+        this(foodPostId, senderPhone, senderName, receiverPhone, message);
+        this.isRequest = isRequest;
     }
 
     // Getters and Setters
@@ -121,5 +130,13 @@ public class ChatMessage {
 
     public void setMessageType(String messageType) {
         this.messageType = messageType;
+    }
+
+    public boolean isRequest() {
+        return isRequest;
+    }
+
+    public void setRequest(boolean request) {
+        isRequest = request;
     }
 }

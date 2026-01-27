@@ -467,6 +467,11 @@
                             style="width: 100%; justify-content: center; border: none; cursor: pointer;">
                             <i class="fas fa-hand-holding-heart"></i> Donate to This Request
                         </button>
+                        <div th:if="${req.status == 'Processing'}"
+                            style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px dashed var(--glass-border);">
+                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                            Donor committed! Let's help others.
+                        </div>
                     </div>
                 </div>
 

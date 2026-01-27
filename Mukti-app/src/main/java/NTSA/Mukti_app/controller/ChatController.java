@@ -30,6 +30,9 @@ public class ChatController {
     private UserRepository userRepository;
 
     @Autowired
+    private NTSA.Mukti_app.repository.FoodRequestRepository foodRequestRepository;
+
+    @Autowired
     private NTSA.Mukti_app.service.NotificationService notificationService;
 
     // View chat list page
@@ -48,51 +51,62 @@ public class ChatController {
         List<Map<String, Object>> asReceiver = new ArrayList<>();
 
         for (ChatMessage msg : latestMessages) {
-            Optional<FoodPost> foodPostOpt = foodRepository.findById(msg.getFoodPostId());
-            if (foodPostOpt.isEmpty())
-                continue;
+            String foodName;
+            String location;
+            boolean isDonor;
+            boolean isReceiver;
+            boolean isPostReceived;
 
-            FoodPost post = foodPostOpt.get();
+            if (msg.isRequest()) {
+                Optional<NTSA.Mukti_app.model.FoodRequest> reqOpt = foodRequestRepository.findById(msg.getFoodPostId());
+                if (reqOpt.isEmpty())
+                    continue;
+                NTSA.Mukti_app.model.FoodRequest req = reqOpt.get();
+                foodName = req.getFoodName();
+                location = req.getLocation();
+                isDonor = req.getDonorPhone() != null && req.getDonorPhone().trim().equals(userPhone);
+                isReceiver = req.getRequesterPhone() != null && req.getRequesterPhone().trim().equals(userPhone);
+                isPostReceived = "Received".equals(req.getStatus());
+            } else {
+                Optional<FoodPost> foodPostOpt = foodRepository.findById(msg.getFoodPostId());
+                if (foodPostOpt.isEmpty())
+                    continue;
+                FoodPost post = foodPostOpt.get();
+                foodName = post.getFoodName();
+                location = post.getLocation();
+                isDonor = post.getDonorPhone().trim().equals(userPhone);
+                isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
+                isPostReceived = post.isReceived();
+            }
 
-            // Determine Role
-            boolean isDonor = post.getDonorPhone().trim().equals(userPhone);
-            boolean isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
-
-            // Skip if user is neither donor nor receiver (shouldn't happen with the query
-            // but good for safety)
             if (!isDonor && !isReceiver)
                 continue;
 
-            // Determine Other Party Details
             String otherPhone = msg.getSenderPhone().trim().equals(userPhone)
                     ? msg.getReceiverPhone().trim()
                     : msg.getSenderPhone().trim();
 
-            // Fetch the most up-to-date name from User repo
             String otherName = userRepository.findByPhone(otherPhone)
                     .map(User::getName)
-                    .filter(name -> name != null && !name.trim().isEmpty())
                     .orElse(msg.getSenderPhone().trim().equals(userPhone) ? "User" : msg.getSenderName());
 
-            if (otherName == null || otherName.trim().isEmpty())
-                otherName = "User";
-
-            // Count unread messages (sent TO current user)
-            long unreadCount = chatMessageRepository.findConversation(post.getId(), userPhone, otherPhone)
+            long unreadCount = chatMessageRepository
+                    .findConversation(msg.getFoodPostId(), userPhone, otherPhone, msg.isRequest())
                     .stream()
                     .filter(m -> !m.isReadStatus() && m.getReceiverPhone().trim().equals(userPhone))
                     .count();
 
             Map<String, Object> conv = new HashMap<>();
-            conv.put("foodPostId", post.getId());
-            conv.put("foodName", post.getFoodName());
+            conv.put("foodPostId", msg.getFoodPostId());
+            conv.put("isRequest", msg.isRequest());
+            conv.put("foodName", foodName);
             conv.put("otherUserName", otherName);
             conv.put("otherUserPhone", otherPhone);
             conv.put("lastMessage", msg.getMessage());
             conv.put("lastMessageTime", msg.getTimestamp());
             conv.put("unreadCount", unreadCount);
-            conv.put("isReceived", post.isReceived());
-            conv.put("location", post.getLocation());
+            conv.put("isReceived", isPostReceived);
+            conv.put("location", location);
 
             if (isDonor) {
                 asDonor.add(conv);
@@ -111,52 +125,69 @@ public class ChatController {
     @GetMapping("/room/{foodPostId}")
     public String chatRoom(@PathVariable Long foodPostId,
             @RequestParam String otherPhone,
+            @RequestParam(defaultValue = "false") boolean isRequest,
             HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null)
             return "redirect:/login";
 
-        Optional<FoodPost> foodPost = foodRepository.findById(foodPostId);
-        if (foodPost.isEmpty())
-            return "redirect:/chat";
-
-        FoodPost post = foodPost.get();
+        String foodName;
+        boolean isDonor;
+        boolean isReceiver;
         String userPhone = user.getPhone().trim();
         String targetPhone = otherPhone.trim();
 
-        // 1. Authorization: User must be either Donor or Receiver
-        boolean isDonor = post.getDonorPhone().trim().equals(userPhone);
-        boolean isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
+        if (isRequest) {
+            Optional<NTSA.Mukti_app.model.FoodRequest> reqOpt = foodRequestRepository.findById(foodPostId);
+            if (reqOpt.isEmpty())
+                return "redirect:/chat";
+            NTSA.Mukti_app.model.FoodRequest req = reqOpt.get();
+            foodName = req.getFoodName();
+            isDonor = req.getDonorPhone() != null && req.getDonorPhone().trim().equals(userPhone);
+            isReceiver = req.getRequesterPhone() != null && req.getRequesterPhone().trim().equals(userPhone);
 
-        // 2. Cross-Verification: The 'otherPhone' must be the actual counterpart
-        boolean isValidCounterpart = (isDonor && post.getReceiverPhone() != null
-                && post.getReceiverPhone().trim().equals(targetPhone))
-                || (isReceiver && post.getDonorPhone().trim().equals(targetPhone));
+            boolean isValidCounterpart = (isDonor && req.getRequesterPhone().trim().equals(targetPhone))
+                    || (isReceiver && req.getDonorPhone().trim().equals(targetPhone));
+            if (!isValidCounterpart)
+                return "redirect:/chat";
 
-        if (!(isDonor || isReceiver) || !isValidCounterpart) {
-            return "redirect:/chat";
+            Map<String, Object> postMap = new HashMap<>();
+            postMap.put("id", req.getId());
+            postMap.put("foodName", req.getFoodName());
+            model.addAttribute("foodPost", postMap);
+        } else {
+            Optional<FoodPost> foodPostOpt = foodRepository.findById(foodPostId);
+            if (foodPostOpt.isEmpty())
+                return "redirect:/chat";
+            FoodPost post = foodPostOpt.get();
+            foodName = post.getFoodName();
+            isDonor = post.getDonorPhone().trim().equals(userPhone);
+            isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
+
+            boolean isValidCounterpart = (isDonor && post.getReceiverPhone() != null
+                    && post.getReceiverPhone().trim().equals(targetPhone))
+                    || (isReceiver && post.getDonorPhone().trim().equals(targetPhone));
+            if (!isValidCounterpart)
+                return "redirect:/chat";
+
+            model.addAttribute("foodPost", post);
         }
 
         // Get and mark as read
-        List<ChatMessage> messages = chatMessageRepository.findConversation(foodPostId, userPhone, targetPhone);
-        messages.stream()
-                .filter(m -> !m.isReadStatus() && m.getReceiverPhone().trim().equals(userPhone))
-                .forEach(m -> {
-                    m.setReadStatus(true);
-                    chatMessageRepository.save(m);
-                });
+        List<ChatMessage> messages = chatMessageRepository.findConversation(foodPostId, userPhone, targetPhone,
+                isRequest);
+        chatMessageRepository.markAsRead(foodPostId, userPhone, isRequest);
 
         String otherName = userRepository.findByPhone(targetPhone)
                 .map(User::getName)
-                .filter(name -> name != null && !name.trim().isEmpty())
                 .orElse("Unknown User");
 
-        model.addAttribute("foodPost", post);
         model.addAttribute("messages", messages);
         model.addAttribute("currentUser", user);
         model.addAttribute("otherUserName", otherName);
         model.addAttribute("otherUserPhone", targetPhone);
         model.addAttribute("myRole", isDonor ? "DONOR" : "RECEIVER");
+        model.addAttribute("isRequest", isRequest);
 
         return "chat-room";
     }
@@ -164,41 +195,56 @@ public class ChatController {
     // Send message via REST API
     @PostMapping("/send")
     @ResponseBody
-    public ResponseEntity<?> sendMessage(@RequestBody Map<String, String> payload, HttpSession session) {
+    public ResponseEntity<?> sendMessage(@RequestBody Map<String, Object> payload, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null)
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
 
         try {
-            Long foodPostId = Long.parseLong(payload.get("foodPostId"));
-            String targetPhone = payload.get("receiverPhone").trim();
-            String message = payload.get("message");
+            Long foodPostId = Long.parseLong(payload.get("foodPostId").toString());
+            String targetPhone = payload.get("receiverPhone").toString().trim();
+            String message = payload.get("message").toString();
+            boolean isRequest = payload.containsKey("isRequest") && (boolean) payload.get("isRequest");
             String userPhone = user.getPhone().trim();
 
             if (message == null || message.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Empty message"));
             }
 
-            // Security: Ensure sender and receiver are the CORRECT participants for this
-            // post
-            Optional<FoodPost> postOpt = foodRepository.findById(foodPostId);
-            if (postOpt.isEmpty())
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid post"));
+            if (isRequest) {
+                Optional<NTSA.Mukti_app.model.FoodRequest> reqOpt = foodRequestRepository.findById(foodPostId);
+                if (reqOpt.isEmpty())
+                    return ResponseEntity.badRequest().body(Map.of("error", "Invalid request"));
+                NTSA.Mukti_app.model.FoodRequest req = reqOpt.get();
+                boolean isDonor = req.getDonorPhone() != null && req.getDonorPhone().trim().equals(userPhone);
+                boolean isReceiver = req.getRequesterPhone() != null
+                        && req.getRequesterPhone().trim().equals(userPhone);
+                boolean authorized = (isDonor && req.getRequesterPhone().trim().equals(targetPhone))
+                        || (isReceiver && req.getDonorPhone().trim().equals(targetPhone));
+                if (!authorized)
+                    return ResponseEntity.status(403).body(Map.of("error", "Unauthorized"));
+            } else {
+                Optional<FoodPost> postOpt = foodRepository.findById(foodPostId);
+                if (postOpt.isEmpty())
+                    return ResponseEntity.badRequest().body(Map.of("error", "Invalid post"));
 
-            FoodPost post = postOpt.get();
-            boolean isDonor = post.getDonorPhone().trim().equals(userPhone);
-            boolean isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
+                FoodPost post = postOpt.get();
+                boolean isDonor = post.getDonorPhone().trim().equals(userPhone);
+                boolean isReceiver = post.getReceiverPhone() != null
+                        && post.getReceiverPhone().trim().equals(userPhone);
 
-            boolean authorizedReceiver = (isDonor && post.getReceiverPhone() != null
-                    && post.getReceiverPhone().trim().equals(targetPhone))
-                    || (isReceiver && post.getDonorPhone().trim().equals(targetPhone));
+                boolean authorizedReceiver = (isDonor && post.getReceiverPhone() != null
+                        && post.getReceiverPhone().trim().equals(targetPhone))
+                        || (isReceiver && post.getDonorPhone().trim().equals(targetPhone));
 
-            if (!authorizedReceiver) {
-                return ResponseEntity.status(403)
-                        .body(Map.of("error", "You are not authorized to message this user about this post"));
+                if (!authorizedReceiver) {
+                    return ResponseEntity.status(403)
+                            .body(Map.of("error", "You are not authorized to message this user about this post"));
+                }
             }
 
-            ChatMessage chatMsg = new ChatMessage(foodPostId, userPhone, user.getName(), targetPhone, message.trim());
+            ChatMessage chatMsg = new ChatMessage(foodPostId, userPhone, user.getName(), targetPhone, message.trim(),
+                    isRequest);
             chatMessageRepository.save(chatMsg);
 
             // Notify Receiver
@@ -213,14 +259,16 @@ public class ChatController {
     // Get messages
     @GetMapping("/messages/{foodPostId}")
     @ResponseBody
-    public ResponseEntity<?> getMessages(@PathVariable Long foodPostId, @RequestParam String otherPhone,
+    public ResponseEntity<?> getMessages(@PathVariable Long foodPostId,
+            @RequestParam String otherPhone,
+            @RequestParam(defaultValue = "false") boolean isRequest,
             HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null)
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
 
         List<ChatMessage> messages = chatMessageRepository.findConversation(foodPostId, user.getPhone().trim(),
-                otherPhone.trim());
+                otherPhone.trim(), isRequest);
         return ResponseEntity.ok(messages);
     }
 
