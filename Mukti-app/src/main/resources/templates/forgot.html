@@ -56,6 +56,8 @@
             padding: 48px;
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
             animation: fadeIn 0.8s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         @keyframes fadeIn {
@@ -101,9 +103,22 @@
             letter-spacing: 0.5px;
         }
 
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+            font-size: 1.1rem;
+        }
+
         .input-field {
             width: 100%;
-            padding: 16px 24px;
+            padding: 16px 24px 16px 52px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-pill);
@@ -131,9 +146,18 @@
             transition: all 0.3s ease;
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
             margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .btn:hover {
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3);
         }
@@ -159,6 +183,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            display: none;
+            /* Hidden by default */
         }
 
         .alert-error {
@@ -172,39 +198,214 @@
             color: var(--primary-light);
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
+
+        /* Step transitions */
+        .step-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="card">
         <header class="header">
-            <h1>Reset Password</h1>
-            <p>We'll help you get back in.</p>
+            <h1 id="page-title">Reset Password</h1>
+            <p id="page-subtitle">We'll help you get back in.</p>
         </header>
 
-        <div th:if="${error}" class="alert alert-error">
-            <i class="fas fa-exclamation-circle"></i>
-            <span th:text="${error}">Error message</span>
+        <!-- Notification Area -->
+        <div id="alert-box" class="alert">
+            <i id="alert-icon" class="fas"></i>
+            <span id="alert-message">Message</span>
         </div>
 
-        <div th:if="${success}" class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            <span th:text="${success}">Success message</span>
+        <!-- Step 1: Email Input -->
+        <div id="step-email" class="step-container">
+            <form id="email-form" onsubmit="handleEmailSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="input-field" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="email-btn">
+                    <span>Send OTP</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
         </div>
 
-        <form th:action="@{/forgot}" method="post">
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="input-field" placeholder="your@email.com" required>
-            </div>
-
-            <button type="submit" class="btn">Send Link</button>
-        </form>
+        <!-- Step 2: OTP Input -->
+        <div id="step-otp" class="step-container hidden">
+            <form id="otp-form" onsubmit="handleOtpSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Enter OTP Code</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="otp" class="input-field" placeholder="6-digit code" maxlength="6"
+                            pattern="\d{6}" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="otp-btn">
+                    <span>Verify OTP</span>
+                    <div class="spinner"></div>
+                </button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" onclick="resetView()"
+                        style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem;">Change
+                        Email</button>
+                </div>
+            </form>
+        </div>
 
         <div class="footer">
             <p>Remembered? <a th:href="@{/login}">Back to Login</a></p>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        // Alert Helper
+        function showAlert(type, message) {
+            const box = document.getElementById('alert-box');
+            const icon = document.getElementById('alert-icon');
+            const msg = document.getElementById('alert-message');
+
+            box.style.display = 'flex';
+            box.className = `alert alert-${type}`;
+            msg.textContent = message;
+
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+        }
+
+        function hideAlert() {
+            document.getElementById('alert-box').style.display = 'none';
+        }
+
+        // Loading Helper
+        function setLoading(btnId, isLoading) {
+            const btn = document.getElementById(btnId);
+            const spinner = btn.querySelector('.spinner');
+            const text = btn.querySelector('span');
+
+            if (isLoading) {
+                btn.disabled = true;
+                spinner.style.display = 'block';
+                text.style.opacity = '0.5';
+            } else {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                text.style.opacity = '1';
+            }
+        }
+
+        // Step 1: Handle Email Submit
+        async function handleEmailSubmit(e) {
+            e.preventDefault();
+            hideAlert();
+
+            const email = document.getElementById('email').value;
+            setLoading('email-btn', true);
+
+            try {
+                const formData = new FormData();
+                formData.append('email', email);
+
+                const response = await fetch('/forgot/send-otp', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Transition to OTP step
+                    showAlert('success', 'OTP Sent! Check your email.');
+                    document.getElementById('step-email').classList.add('hidden');
+                    document.getElementById('step-otp').classList.remove('hidden');
+                    document.getElementById('page-subtitle').textContent = `Code sent to ${email}`;
+                } else {
+                    showAlert('error', data.message || 'Failed to send OTP');
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('error', 'Something went wrong. Please try again.');
+            } finally {
+                setLoading('email-btn', false);
+            }
+        }
+
+        // Step 2: Handle OTP Submit
+        async function handleOtpSubmit(e) {
+            e.preventDefault();
+            hideAlert();
+
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+            setLoading('otp-btn', true);
+
+            try {
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('otp', otp);
+
+                const response = await fetch('/forgot/verify-otp', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAlert('success', 'OTP Verified! Redirecting...');
+                    // Optional: Redirect to reset password page if implemented
+                    setTimeout(() => {
+                        window.location.href = '/login?message=Verified'; // or reset page
+                    }, 1500);
+                } else {
+                    showAlert('error', data.message || 'Invalid OTP');
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('error', 'Verification failed. Try again.');
+            } finally {
+                setLoading('otp-btn', false);
+            }
+        }
+
+        function resetView() {
+            document.getElementById('step-otp').classList.add('hidden');
+            document.getElementById('step-email').classList.remove('hidden');
+            document.getElementById('page-subtitle').textContent = "We'll help you get back in.";
+            hideAlert();
+        }
+    </script>
 </body>
 
 </html>
