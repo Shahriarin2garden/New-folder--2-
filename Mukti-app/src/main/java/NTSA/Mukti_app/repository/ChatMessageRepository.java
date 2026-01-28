@@ -39,4 +39,8 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
                      "(m2.senderPhone = ?1 OR m2.receiverPhone = ?1) " +
                      "GROUP BY m2.foodPostId, m2.isRequest) ORDER BY m.timestamp DESC")
        List<ChatMessage> findLatestMessagesByUser(String phone);
+
+       // Get all messages involving a user, ordered by newest first (for Java-side
+       // grouping)
+       List<ChatMessage> findBySenderPhoneOrReceiverPhoneOrderByTimestampDesc(String senderPhone, String receiverPhone);
 }

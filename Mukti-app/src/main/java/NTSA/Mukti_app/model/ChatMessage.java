@@ -35,7 +35,7 @@ public class ChatMessage {
     @Column(nullable = false)
     private String messageType = "TEXT"; // TEXT, SYSTEM
 
-    @Column(nullable = false)
+    @Column(name = "is_request", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isRequest = false; // Flag for food requests
 
     // Constructors

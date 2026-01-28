@@ -44,17 +44,30 @@ public class ChatController {
 
         String userPhone = user.getPhone().trim();
 
-        // Get latest messages for all conversations involving this user
-        List<ChatMessage> latestMessages = chatMessageRepository.findLatestMessagesByUser(userPhone);
+        // Get all messages for this user, newest first
+        List<ChatMessage> allMessages = chatMessageRepository
+                .findBySenderPhoneOrReceiverPhoneOrderByTimestampDesc(userPhone, userPhone);
 
         List<Map<String, Object>> asDonor = new ArrayList<>();
         List<Map<String, Object>> asReceiver = new ArrayList<>();
+        Set<String> processedConversations = new HashSet<>();
 
-        for (ChatMessage msg : latestMessages) {
+        for (ChatMessage msg : allMessages) {
+            String otherPhone = msg.getSenderPhone().trim().equals(userPhone)
+                    ? msg.getReceiverPhone().trim()
+                    : msg.getSenderPhone().trim();
+
+            // Unique key for conversation: FoodPostID + isRequest + OtherUser
+            String conversationKey = msg.getFoodPostId() + "_" + msg.isRequest() + "_" + otherPhone;
+
+            if (processedConversations.contains(conversationKey)) {
+                continue;
+            }
+            processedConversations.add(conversationKey);
+
             String foodName;
             String location;
-            boolean isDonor;
-            boolean isReceiver;
+            boolean amIDonorSide; // True if I am the Donor/Fulfiller, False if I am Receiver/Requester
             boolean isPostReceived;
 
             if (msg.isRequest()) {
@@ -64,9 +77,15 @@ public class ChatController {
                 NTSA.Mukti_app.model.FoodRequest req = reqOpt.get();
                 foodName = req.getFoodName();
                 location = req.getLocation();
-                isDonor = req.getDonorPhone() != null && req.getDonorPhone().trim().equals(userPhone);
-                isReceiver = req.getRequesterPhone() != null && req.getRequesterPhone().trim().equals(userPhone);
                 isPostReceived = "Received".equals(req.getStatus());
+
+                // Logic: If I am the requester, I am on the Receiver side. Everyone else
+                // (helping me) is Donor side.
+                if (req.getRequesterPhone() != null && req.getRequesterPhone().trim().equals(userPhone)) {
+                    amIDonorSide = false;
+                } else {
+                    amIDonorSide = true;
+                }
             } else {
                 Optional<FoodPost> foodPostOpt = foodRepository.findById(msg.getFoodPostId());
                 if (foodPostOpt.isEmpty())
@@ -74,17 +93,16 @@ public class ChatController {
                 FoodPost post = foodPostOpt.get();
                 foodName = post.getFoodName();
                 location = post.getLocation();
-                isDonor = post.getDonorPhone().trim().equals(userPhone);
-                isReceiver = post.getReceiverPhone() != null && post.getReceiverPhone().trim().equals(userPhone);
                 isPostReceived = post.isReceived();
+
+                // Logic: If I am the donor, I am Donor side. Everyone else (asking me) is
+                // Receiver side.
+                if (post.getDonorPhone().trim().equals(userPhone)) {
+                    amIDonorSide = true;
+                } else {
+                    amIDonorSide = false;
+                }
             }
-
-            if (!isDonor && !isReceiver)
-                continue;
-
-            String otherPhone = msg.getSenderPhone().trim().equals(userPhone)
-                    ? msg.getReceiverPhone().trim()
-                    : msg.getSenderPhone().trim();
 
             String otherName = userRepository.findByPhone(otherPhone)
                     .map(User::getName)
@@ -108,7 +126,7 @@ public class ChatController {
             conv.put("isReceived", isPostReceived);
             conv.put("location", location);
 
-            if (isDonor) {
+            if (amIDonorSide) {
                 asDonor.add(conv);
             } else {
                 asReceiver.add(conv);
